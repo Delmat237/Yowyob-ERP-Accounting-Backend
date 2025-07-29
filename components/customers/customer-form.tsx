@@ -7,78 +7,164 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Save, Trash2 } from 'lucide-react';
-import { StatCard } from '../ui/stat-card';
 import { Switch } from '../ui/switch';
+import { StatCard } from '../ui/stat-card';
 
 interface CustomerFormProps {
     initialData: Client | null;
 }
 
-export function CustomerForm({ initialData }: CustomerFormProps) {
-    const form = useForm<Client>({ defaultValues: initialData || { isActive: true, isTaxable: true, pricingLevels: ['detail'] } });
+const CustomerForm = ({ initialData, onCancel }) => {
     const isNew = !initialData;
-    
-    return (
-        <Form {...form}>
-            <form className="h-full flex flex-col gap-4">
-                <Card className="flex-shrink-0">
-                    <CardHeader className="flex flex-row items-center justify-between p-4">
-                        <CardTitle className="text-lg">{isNew ? "Nouveau Client" : "Modifier le Client"}</CardTitle>
-                        <StatCard title="Solde" value={initialData?.balance?.toLocaleString() || 0} variant={initialData && initialData.balance < 0 ? "destructive" : "default"} className="w-40 text-right" />
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 pt-0">
-                        <FormField name="companyName" render={({ field }) => (<FormItem><FormLabel>Raison sociale*</FormLabel><Input {...field} /></FormItem>)} />
-                        <FormField name="code" render={({ field }) => (<FormItem><FormLabel>Code*</FormLabel><Input {...field} /></FormItem>)} />
-                        <FormField name="contactPerson" render={({ field }) => (<FormItem><FormLabel>Contact</FormLabel><Input {...field} /></FormItem>)} />
-                    </CardContent>
-                </Card>
-                
-                <Tabs defaultValue="main" className="flex-grow flex flex-col min-h-0">
-                    <TabsList className="flex-shrink-0">
-                        <TabsTrigger value="main">Infos Principales</TabsTrigger>
-                        <TabsTrigger value="accounting">Infos Comptables</TabsTrigger>
-                        <TabsTrigger value="products">Produits</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="main" className="flex-grow mt-2 overflow-y-auto pr-2">
-                       <Card><CardContent className="p-4 space-y-4">
-                           <CardTitle className="text-base font-semibold">Conditions Commerciales</CardTitle>
-                           <div className="flex items-center space-x-6">
-                              <FormField name="isTaxable" render={({ field }) => (<FormItem className="flex items-center space-x-2"><FormControl><Checkbox checked={field.value} onCheckedChange={field.onChange} /></FormControl><FormLabel className="!mt-0">Assujeti à la TVA</FormLabel></FormItem>)} />
-                               <div>
-                                 <FormLabel>Prix à appliquer</FormLabel>
-                                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-2">
-                                    <FormField name="pricingLevels" render={() => (<FormItem className="flex items-center space-x-2"><Checkbox/><FormLabel className="!mt-0 font-normal">Détail</FormLabel></FormItem>)}/>
-                                    <FormField name="pricingLevels" render={() => (<FormItem className="flex items-center space-x-2"><Checkbox/><FormLabel className="!mt-0 font-normal">Demi-gros</FormLabel></FormItem>)}/>
-                                    <FormField name="pricingLevels" render={() => (<FormItem className="flex items-center space-x-2"><Checkbox/><FormLabel className="!mt-0 font-normal">Gros</FormLabel></FormItem>)}/>
-                                    <FormField name="pricingLevels" render={() => (<FormItem className="flex items-center space-x-2"><Checkbox/><FormLabel className="!mt-0 font-normal">Super Gros</FormLabel></FormItem>)}/>
-                                 </div>
-                               </div>
-                           </div>
-                           <CardTitle className="text-base font-semibold pt-4">Coordonnées</CardTitle>
-                           <div className="grid grid-cols-2 gap-4">
-                               <FormField name="address" render={({ field }) => (<FormItem className="col-span-2"><FormLabel>Adresse</FormLabel><Input {...field} /></FormItem>)} />
-                               <FormField name="phone" render={({ field }) => (<FormItem><FormLabel>Téléphone</FormLabel><Input {...field} /></FormItem>)} />
-                               <FormField name="fax" render={({ field }) => (<FormItem><FormLabel>Fax</FormLabel><Input {...field} /></FormItem>)} />
-                               <FormField name="email" render={({ field }) => (<FormItem><FormLabel>Email</FormLabel><Input type="email" {...field} /></FormItem>)} />
-                               <FormField name="website" render={({ field }) => (<FormItem><FormLabel>Site Web</FormLabel><Input {...field} /></FormItem>)} />
-                               <FormField name="notes" render={({ field }) => (<FormItem className="col-span-2"><FormLabel>Notes</FormLabel><Textarea rows={2} {...field} /></FormItem>)} />
-                           </div>
-                       </CardContent></Card>
-                    </TabsContent>
-                    <TabsContent value="accounting" className="flex-grow p-1 overflow-y-auto"><Card><CardContent className="p-4">Informations comptables du client...</CardContent></Card></TabsContent>
-                    <TabsContent value="products" className="flex-grow p-1 overflow-y-auto"><Card><CardContent className="p-4">Liste des produits achetés par le client...</CardContent></Card></TabsContent>
-                </Tabs>
 
-                <div className="flex-shrink-0 flex justify-between items-center pt-3 mt-1 border-t">
-                     <FormField name="isActive" render={({ field }) => (<FormItem className="flex items-center space-x-2"><Switch checked={field.value} onCheckedChange={field.onChange}/><FormLabel>{field.value ? "Client Actif" : "Client Inactif"}</FormLabel></FormItem>)} />
-                    <div className="space-x-2">
-                        {!isNew && <Button variant="destructive" size="sm"><Trash2 className="h-4 w-4 mr-2"/>Supprimer</Button>}
-                        <Button size="sm"><Save className="h-4 w-4 mr-2"/>{isNew ? "Enregistrer" : "Mettre à jour"}</Button>
+    return (
+        <div className="h-full flex flex-col bg-white">
+            <div className="p-6 border-b bg-white">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h2 className="text-xl font-semibold text-gray-900">
+                            {isNew ? "Nouveau Client" : "Profil Client"}
+                        </h2>
+                        {initialData && (
+                            <p className="text-sm text-gray-600 mt-1">
+                                Solde: <span className={initialData.balance >= 0 ? 'text-green-600' : 'text-red-600'}>
+                                    {initialData.balance.toLocaleString('fr-FR')} FCFA
+                                </span>
+                            </p>
+                        )}
                     </div>
+                    {isNew && (
+                        <button
+                            onClick={onCancel}
+                            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                        >
+                            <X size={20} />
+                        </button>
+                    )}
                 </div>
-            </form>
-        </Form>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6">
+                <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Raison sociale *
+                            </label>
+                            <input
+                                type="text"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                defaultValue={initialData?.companyName || ''}
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Code *
+                            </label>
+                            <input
+                                type="text"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                defaultValue={initialData?.code || ''}
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Contact
+                            </label>
+                            <input
+                                type="text"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                defaultValue={initialData?.contactPerson || ''}
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Téléphone
+                            </label>
+                            <input
+                                type="tel"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                defaultValue={initialData?.phone || ''}
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Email
+                            </label>
+                            <input
+                                type="email"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                defaultValue={initialData?.email || ''}
+                            />
+                        </div>
+
+                        <div className="col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Adresse
+                            </label>
+                            <input
+                                type="text"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                            />
+                        </div>
+
+                        <div className="col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Notes
+                            </label>
+                            <textarea
+                                rows={3}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all resize-none"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex items-center space-x-8 pt-4">
+                        <label className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                defaultChecked={initialData?.isTaxable}
+                            />
+                            <span className="text-sm text-gray-700">Assujeti à la TVA</span>
+                        </label>
+
+                        <label className="flex items-center space-x-2">
+                            <div className="relative">
+                                <input
+                                    type="checkbox"
+                                    className="sr-only"
+                                    defaultChecked={initialData?.isActive}
+                                />
+                                <div className="w-10 h-6 bg-gray-200 rounded-full shadow-inner"></div>
+                                <div className="absolute w-4 h-4 bg-white rounded-full shadow -left-1 -top-1 transition"></div>
+                            </div>
+                            <span className="text-sm text-gray-700">Client actif</span>
+                        </label>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div className="p-6 border-t bg-gray-50 flex justify-end space-x-3">
+                {!isNew && (
+                    <button className="px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors flex items-center space-x-2">
+                        <Trash2 size={16} />
+                        <span>Supprimer</span>
+                    </button>
+                )}
+                <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2">
+                    <Save size={16} />
+                    <span>{isNew ? "Enregistrer" : "Mettre à jour"}</span>
+                </button>
+            </div>
+        </div>
     );
-}
+};
+
+export {CustomerForm}

@@ -37,11 +37,11 @@ export function InvoiceManagementView() {
           <CardHeader>
             <CardTitle className="text-base">Rechercher une facture</CardTitle>
           </CardHeader>
-          <CardContent className="p-4 pt-0">
+          <CardContent className="px-4">
             <Form {...searchForm}>
               <form className="space-y-3">
-                <FormItem><FormLabel>Période</FormLabel><DateRangePicker /></FormItem>
-                <FormItem><FormLabel>Nom du client</FormLabel><Input placeholder="Nom client..." /></FormItem>
+                <FormItem className="flex"><FormLabel>Date</FormLabel><DateRangePicker /></FormItem>
+                <FormItem className="flex"><FormLabel>Nom</FormLabel><Input placeholder="Nom client..." /></FormItem>
                 <Button className="w-full">Rechercher</Button>
               </form>
             </Form>
@@ -62,15 +62,17 @@ export function InvoiceManagementView() {
                   }`}
                 >
                   <div className="flex justify-between items-start">
-                    <p className="font-semibold">{invoice.invoiceNumber}</p>
+                    <p className="font-semibold-75">{invoice.invoiceNumber}</p>
                     <Badge variant={statusVariantMap[invoice.status]}>
                       {invoice.status}
                     </Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground">{invoice.client.name}</p>
-                  <p className="text-sm font-bold mt-1">
-                    {invoice.totalTTC.toLocaleString()} XAF
-                  </p>
+                  <div className="flex justify-between">
+                    <p className="text-sm text-muted-foreground">{invoice.client.name}</p>
+                    <p className="text-sm italic">
+                        {invoice.totalTTC.toLocaleString()} XAF
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>

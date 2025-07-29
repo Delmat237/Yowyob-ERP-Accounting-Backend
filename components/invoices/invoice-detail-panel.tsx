@@ -41,11 +41,16 @@ export function InvoiceDetailPanel({ invoice }: InvoiceDetailPanelProps) {
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className="flex-shrink-0">
-        <CardTitle>Facture N° {invoice.invoiceNumber}</CardTitle>
-        <CardDescription>
-          Client: {invoice.client.name} - Date: {format(invoice.orderDate, "dd MMMM yyyy")}
-        </CardDescription>
+      <CardHeader className="flex flex-shrink-0 justify-between mb-2">
+        <div>
+          <CardTitle>Facture N° {invoice.invoiceNumber}</CardTitle>
+          <CardDescription>
+            Client: {invoice.client.name} - Date: {format(invoice.orderDate, "dd MMMM yyyy")}
+          </CardDescription>
+        </div>
+        <div className="flex justify-end">
+          <Button variant="outline"><Printer className="mr-2 h-4 w-4" />Imprimer la facture</Button>
+        </div>
       </CardHeader>
       <div className="flex-shrink-0 grid grid-cols-4 gap-2 px-4">
             <StatCard title="Total HT" value={invoice.totalHT.toLocaleString()} />
@@ -63,9 +68,6 @@ export function InvoiceDetailPanel({ invoice }: InvoiceDetailPanelProps) {
         <TabsContent value="details" className="flex-grow p-6 pt-4 flex flex-col gap-4 overflow-y-auto">
           <div className="flex-grow min-h-0">
             <DataTable columns={itemColumns} data={invoice.items} />
-          </div>
-          <div className="flex-shrink-0 flex justify-end pt-2 border-t">
-            <Button variant="outline"><Printer className="mr-2 h-4 w-4" />Imprimer la facture</Button>
           </div>
         </TabsContent>
 

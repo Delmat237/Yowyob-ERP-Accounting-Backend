@@ -21,7 +21,7 @@ export function StatCard({ title, value, icon, variant = "default", className }:
     <div className={cn(baseClasses, variantClasses[variant], className)}>
       <div className="p-3">
         <p className="text-xs uppercase font-semibold text-muted-foreground">{title}</p>
-        <p className="text-xl font-bold mt-1">{value}</p>
+        <p className="text-l font-bold mt-1">{value}</p>
       </div>
     </div>
   );

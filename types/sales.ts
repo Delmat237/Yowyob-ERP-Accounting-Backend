@@ -1,3 +1,4 @@
+// FILE: types/sales.ts
 export interface ClientSummary {
   id: string;
   name: string;
@@ -50,7 +51,6 @@ export interface Order {
   netToPay: number;
 }
 
-// Nouveau type pour le journal des commandes
 export interface OrderJournalEntry {
     id: string;
     blNumber: string; // No BL
@@ -61,7 +61,9 @@ export interface OrderJournalEntry {
     precompte: number;
     commission: number;
     orderDate: Date;
-    status: string;
+    status: 'Facturée' | 'Livrée' | 'Annulée';
+    salesperson: string;
+    items: OrderItem[];
 }
 
 export interface Payment {

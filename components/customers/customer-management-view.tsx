@@ -6,77 +6,208 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Client } from "@/types/core";
-import { PlusCircle, Search } from "lucide-react";
+import { Search, Plus, User, FileText, Banknote, ShoppingBasket, X } from "lucide-react";
 import { CustomerForm } from "./customer-form";
 
-const mockClients: Client[] = Array.from({ length: 25 }, (_, i) => ({
+// Mock data
+const mockClients = Array.from({ length: 25 }, (_, i) => ({
     id: `${i + 1}`,
     code: `CL1000${650 + i}`,
-    companyName: `Client Exemplaire N°${i + 1}`,
+    companyName: `Client ${String.fromCharCode(65 + i)} - ${['SARL', 'SA', 'ETS', 'GIE'][i%4]}`,
     balance: (i % 3 === 0) ? -Math.random() * 50000 : Math.random() * 150000,
     isActive: i % 10 !== 0,
     isTaxable: true,
-    pricingLevels: ['detail']
+    pricingLevels: ['detail'],
+    contactPerson: `Contact ${i + 1}`,
+    phone: `+237 6${Math.floor(Math.random() * 10)}${Math.floor(Math.random() * 10)} ${Math.floor(Math.random() * 100)} ${Math.floor(Math.random() * 1000)}`,
+    email: `client${i+1}@example.com`
 }));
 
+type ActiveView = 'profile' | 'main' | 'accounting' | 'products';
 
-export function CustomerManagementView() {
-    const [selectedClient, setSelectedClient] = useState<Client | null>(mockClients[0]);
+// Placeholder components
+const MainInfoView = ({ client }) => (
+    <div className="p-6">
+        <h3 className="text-lg font-semibold mb-4 text-gray-900">Informations Principales</h3>
+        <div className="space-y-4">
+            <div>
+                <label className="text-sm font-medium text-gray-600">Raison sociale</label>
+                <p className="text-gray-900">{client.companyName}</p>
+            </div>
+            <div>
+                <label className="text-sm font-medium text-gray-600">Code client</label>
+                <p className="text-gray-900">{client.code}</p>
+            </div>
+        </div>
+    </div>
+);
+
+const AccountingInfoView = ({ client }) => (
+    <div className="p-6">
+        <h3 className="text-lg font-semibold mb-4 text-gray-900">Informations Comptables</h3>
+        <div className="space-y-4">
+            <div>
+                <label className="text-sm font-medium text-gray-600">Solde actuel</label>
+                <p className={`text-lg font-semibold ${client.balance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {client.balance.toLocaleString('fr-FR')} FCFA
+                </p>
+            </div>
+            <div>
+                <label className="text-sm font-medium text-gray-600">Assujeti TVA</label>
+                <p className="text-gray-900">{client.isTaxable ? 'Oui' : 'Non'}</p>
+            </div>
+        </div>
+    </div>
+);
+
+const ProductHistoryView = ({ client }) => (
+    <div className="p-6">
+        <h3 className="text-lg font-semibold mb-4 text-gray-900">Historique Produits</h3>
+        <p className="text-gray-600">Historique des achats pour {client.companyName}</p>
+    </div>
+);
+function CustomerManagementView() {
+    const [selectedClient, setSelectedClient] = useState(null);
     const [isCreating, setIsCreating] = useState(false);
+    const [activeView, setActiveView] = useState('profile');
+    const [searchTerm, setSearchTerm] = useState('');
 
-    const handleSelectClient = (client: Client) => {
+    const filteredClients = mockClients.filter(client =>
+        client.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        client.code.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const handleSelectClient = (client) => {
         setSelectedClient(client);
         setIsCreating(false);
-    }
+        setActiveView('profile');
+    };
     
     const handleAddNew = () => {
-        setSelectedClient(null);
         setIsCreating(true);
-    }
+        setSelectedClient(null);
+    };
+
+    const handleCancelCreation = () => {
+        setIsCreating(false);
+    };
+
+    const menuItems = [
+        { id: 'profile', label: 'Profil Client', icon: User },
+        { id: 'main', label: 'Infos Principales', icon: FileText },
+        { id: 'accounting', label: 'Infos Comptables', icon: Banknote },
+        { id: 'products', label: 'Historique Produits', icon: ShoppingBasket },
+    ];
 
     return (
-        <div className="h-full flex gap-4">
-            <div className="w-1/3 xl:w-1/4 h-full flex flex-col gap-4">
-                 <div className="flex-shrink-0 flex gap-2">
-                    <div className="relative flex-grow">
-                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input placeholder="Rechercher..." className="pl-8 w-full h-9"/>
-                    </div>
-                    <Button onClick={handleAddNew} className="h-9"><PlusCircle className="h-4 w-4 mr-2"/>Nouveau</Button>
+        <div className="h-screen bg-gray-50 flex">
+            {/* Sidebar gauche */}
+            <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+                <div className="p-4 border-b border-gray-200">
+                    <button
+                        onClick={handleAddNew}
+                        className="w-full bg-blue-600 text-white px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2 font-medium"
+                    >
+                        <Plus size={18} />
+                        <span>Nouveau Client</span>
+                    </button>
                 </div>
-                <Card className="flex-grow flex flex-col min-h-0">
-                    <CardContent className="p-2 flex-grow overflow-y-auto">
-                        <div className="space-y-1">
-                        {mockClients.map(client => (
-                            <div key={client.id} onClick={() => handleSelectClient(client)}
-                                className={`p-2 rounded-md cursor-pointer border ${selectedClient?.id === client.id ? 'bg-muted border-primary' : 'hover:bg-muted/50'}`}>
-                                <div className="flex justify-between items-center">
-                                    <p className="font-semibold text-sm truncate">{client.companyName}</p>
-                                    {!client.isActive && <span className="text-xs text-destructive shrink-0 ml-2">Inactif</span>}
-                                </div>
-                                <p className="text-xs text-muted-foreground">{client.code}</p>
-                            </div>
-                        ))}
-                        </div>
-                    </CardContent>
-                </Card>
+                
+                <nav className="flex-1 p-2">
+                    {menuItems.map((item) => {
+                        const Icon = item.icon;
+                        const isActive = activeView === item.id;
+                        const isDisabled = !selectedClient && !isCreating;
+                        
+                        return (
+                            <button
+                                key={item.id}
+                                onClick={() => !isDisabled && setActiveView(item.id)}
+                                disabled={isDisabled}
+                                className={`w-full px-3 py-2.5 rounded-lg text-left flex items-center space-x-3 transition-colors mb-1 ${
+                                    isActive 
+                                        ? 'bg-blue-50 text-blue-700 border border-blue-200' 
+                                        : isDisabled
+                                        ? 'text-gray-400 cursor-not-allowed'
+                                        : 'text-gray-700 hover:bg-gray-100'
+                                }`}
+                            >
+                                <Icon size={18} />
+                                <span className="font-medium">{item.label}</span>
+                            </button>
+                        );
+                    })}
+                </nav>
             </div>
-            <div className="flex-grow h-full">
-                {selectedClient || isCreating ? (
-                    <CustomerForm 
-                        key={selectedClient?.id || 'new'} 
-                        initialData={selectedClient} 
-                    />
-                ) : (
-                    <Card className="h-full flex items-center justify-center bg-muted/40 border-dashed">
-                        <div className="text-center text-sm">
-                            <p className="text-muted-foreground">Sélectionnez un client pour voir les détails</p>
-                            <p className="text-muted-foreground text-xs">ou</p>
-                            <Button variant="link" onClick={handleAddNew} className="text-sm">Créez un nouveau client</Button>
+
+            {/* Liste des clients au centre */}
+            <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+                <div className="p-4 border-b border-gray-200">
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+                        <input
+                            type="text"
+                            placeholder="Rechercher un client..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                        />
+                    </div>
+                </div>
+                
+                <div className="flex-1 overflow-y-auto">
+                    {filteredClients.map((client) => (
+                        <div
+                            key={client.id}
+                            onClick={() => handleSelectClient(client)}
+                            className={`p-4 border-b border-gray-100 cursor-pointer transition-colors hover:bg-gray-50 ${
+                                selectedClient?.id === client.id ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
+                            }`}
+                        >
+                            <div className="flex items-center justify-between mb-1">
+                                <h3 className="font-medium text-gray-900 truncate pr-2">
+                                    {client.companyName}
+                                </h3>
+                                {!client.isActive && (
+                                    <span className="text-xs text-red-600 bg-red-100 px-2 py-1 rounded-full">
+                                        Inactif
+                                    </span>
+                                )}
+                            </div>
+                            <p className="text-sm text-gray-600">{client.code}</p>
+                            <p className="text-xs text-gray-500 mt-1">{client.contactPerson}</p>
                         </div>
-                    </Card>
+                    ))}
+                </div>
+            </div>
+
+            {/* Contenu principal à droite */}
+            <div className="flex-1 bg-white">
+                {isCreating ? (
+                    <CustomerForm initialData={null} onCancel={handleCancelCreation} />
+                ) : selectedClient ? (
+                    <>
+                        {activeView === 'profile' && <CustomerForm initialData={selectedClient} />}
+                        {activeView === 'main' && <MainInfoView client={selectedClient} />}
+                        {activeView === 'accounting' && <AccountingInfoView client={selectedClient} />}
+                        {activeView === 'products' && <ProductHistoryView client={selectedClient} />}
+                    </>
+                ) : (
+                    <div className="h-full flex items-center justify-center">
+                        <div className="text-center">
+                            <User className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                            <h3 className="text-lg font-medium text-gray-900 mb-2">
+                                Aucun client sélectionné
+                            </h3>
+                            <p className="text-gray-600">
+                                Sélectionnez un client dans la liste pour voir ses détails
+                            </p>
+                        </div>
+                    </div>
                 )}
             </div>
         </div>
     );
 }
+
+export {CustomerManagementView}
