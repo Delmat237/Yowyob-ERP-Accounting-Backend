@@ -47,6 +47,12 @@ export function InvoiceDetailPanel({ invoice }: InvoiceDetailPanelProps) {
           Client: {invoice.client.name} - Date: {format(invoice.orderDate, "dd MMMM yyyy")}
         </CardDescription>
       </CardHeader>
+      <div className="flex-shrink-0 grid grid-cols-4 gap-2 px-4">
+            <StatCard title="Total HT" value={invoice.totalHT.toLocaleString()} />
+            <StatCard title="Total TVA" value={invoice.totalTVA.toLocaleString()} />
+            <StatCard title="Total TTC" value={invoice.totalTTC.toLocaleString()} />
+            <StatCard title="Solde Dû" value={invoice.balanceDue.toLocaleString()} variant={invoice.balanceDue > 0 ? "destructive" : "default"} />
+      </div>
       <Tabs defaultValue="details" className="flex-grow flex flex-col min-h-0">
         <TabsList className="mx-6 flex-shrink-0">
           <TabsTrigger value="details"><FileText className="mr-2 h-4 w-4" />Détails</TabsTrigger>
@@ -57,12 +63,6 @@ export function InvoiceDetailPanel({ invoice }: InvoiceDetailPanelProps) {
         <TabsContent value="details" className="flex-grow p-6 pt-4 flex flex-col gap-4 overflow-y-auto">
           <div className="flex-grow min-h-0">
             <DataTable columns={itemColumns} data={invoice.items} />
-          </div>
-          <div className="flex-shrink-0 grid grid-cols-4 gap-2">
-            <StatCard title="Total HT" value={invoice.totalHT.toLocaleString()} />
-            <StatCard title="Total TVA" value={invoice.totalTVA.toLocaleString()} />
-            <StatCard title="Total TTC" value={invoice.totalTTC.toLocaleString()} />
-            <StatCard title="Solde Dû" value={invoice.balanceDue.toLocaleString()} variant={invoice.balanceDue > 0 ? "destructive" : "default"} />
           </div>
           <div className="flex-shrink-0 flex justify-end pt-2 border-t">
             <Button variant="outline"><Printer className="mr-2 h-4 w-4" />Imprimer la facture</Button>
