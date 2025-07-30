@@ -1,0 +1,80 @@
+import { Client, Product } from "@/types/core";
+import { Profile, SystemAudit, User } from "@/types/personnel";
+import { Invoice, Order, OrderJournalEntry } from "@/types/sales";
+import { Warehouse, StockMovement, Inventory } from "@/types/stock";
+
+const API_BASE_URL = "http://localhost:3001";
+
+const apiRequest = async <T>(endpoint: string, method: string = 'GET', body?: any): Promise<T> => {
+    const config: RequestInit = {
+        method,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+
+    if (body) {
+        config.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+
+    if (!response.ok) {
+        const errorInfo = await response.json();
+        throw new Error(errorInfo.message || `Erreur API: ${method} ${endpoint}`);
+    }
+    
+    if (method === 'DELETE' || response.status === 204) {
+        return {} as T; 
+    }
+
+    return response.json();
+};
+
+export const getClients = (query?: string): Promise<Client[]> => apiRequest<Client[]>(`/clients${query ? `?q=${query}` : ''}`);
+export const createClient = (data: Omit<Client, 'id'>): Promise<Client> => apiRequest<Client>("/clients", 'POST', data);
+export const updateClient = (id: string, data: Partial<Client>): Promise<Client> => apiRequest<Client>(`/clients/${id}`, 'PATCH', data);
+export const deleteClient = (id: string): Promise<void> => apiRequest<void>(`/clients/${id}`, 'DELETE');
+
+export const getProducts = (query?: string): Promise<Product[]> => apiRequest<Product[]>(`/products${query ? `?q=${query}` : ''}`);
+export const createProduct = (data: Omit<Product, 'id'>): Promise<Product> => apiRequest<Product>("/products", 'POST', data);
+export const updateProduct = (id: string, data: Partial<Product>): Promise<Product> => apiRequest<Product>(`/products/${id}`, 'PATCH', data);
+export const deleteProduct = (id: string): Promise<void> => apiRequest<void>(`/products/${id}`, 'DELETE');
+
+export const getInvoices = async (): Promise<Invoice[]> => {
+    const invoices = await apiRequest<Invoice[]>("/invoices");
+    return invoices.map(invoice => ({ ...invoice, orderDate: new Date(invoice.orderDate), dueDate: new Date(invoice.dueDate) }));
+};
+
+export const getOrderJournal = async (): Promise<OrderJournalEntry[]> => {
+    const journal = await apiRequest<OrderJournalEntry[]>("/orderJournal");
+    return journal.map(entry => ({ ...entry, orderDate: new Date(entry.orderDate) }));
+};
+export const updateOrderJournalEntry = (id: string, data: Partial<OrderJournalEntry>): Promise<OrderJournalEntry> => apiRequest<OrderJournalEntry>(`/orderJournal/${id}`, 'PATCH', data);
+export const deleteOrderJournalEntry = (id: string): Promise<void> => apiRequest<void>(`/orderJournal/${id}`, 'DELETE');
+
+export const getOrders = async (): Promise<Order[]> => {
+    const orders = await apiRequest<Order[]>("/orders");
+    return orders.map(order => ({ ...order, orderDate: new Date(order.orderDate) }));
+};
+export const createOrder = (data: Omit<Order, 'id'>): Promise<Order> => apiRequest<Order>("/orders", 'POST', data);
+export const updateOrder = (id: string, data: Partial<Order>): Promise<Order> => apiRequest<Order>(`/orders/${id}`, 'PATCH', data);
+
+export const getWarehouses = (): Promise<Warehouse[]> => apiRequest<Warehouse[]>('/warehouses');
+export const getStockMovements = (): Promise<StockMovement[]> => apiRequest<StockMovement[]>('/stockMovements?_expand=warehouse');
+export const createStockMovement = (data: Omit<StockMovement, 'id'>): Promise<StockMovement> => apiRequest<StockMovement>('/stockMovements', 'POST', data);
+
+export const getInventories = (): Promise<Inventory[]> => apiRequest<Inventory[]>('/inventories');
+export const createInventory = (data: Omit<Inventory, 'id'>): Promise<Inventory> => apiRequest<Inventory>('/inventories', 'POST', data);
+export const updateInventory = (id: string, data: Partial<Inventory>): Promise<Inventory> => apiRequest<Inventory>(`/inventories/${id}`, 'PATCH', data);
+
+export const getUsers = (): Promise<User[]> => apiRequest<User[]>('/users');
+export const createUser = (data: Omit<User, 'id' | 'creationDate'>): Promise<User> => apiRequest<User>('/users', 'POST', { ...data, creationDate: new Date().toISOString() });
+export const updateUser = (id: string, data: Partial<User>): Promise<User> => apiRequest<User>(`/users/${id}`, 'PATCH', data);
+
+export const getProfiles = (): Promise<Profile[]> => apiRequest<Profile[]>('/profiles');
+export const createProfile = (data: Omit<Profile, 'id'>): Promise<Profile> => apiRequest<Profile>('/profiles', 'POST', data);
+export const updateProfile = (id: string, data: Partial<Profile>): Promise<Profile> => apiRequest<Profile>(`/profiles/${id}`, 'PATCH', data);
+export const deleteProfile = (id: string): Promise<void> => apiRequest<void>(`/profiles/${id}`, 'DELETE');
+
+export const getSystemAudits = (): Promise<SystemAudit[]> => apiRequest<SystemAudit[]>('/systemAudits');

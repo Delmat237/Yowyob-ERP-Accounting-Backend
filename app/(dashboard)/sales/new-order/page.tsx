@@ -1,7 +1,10 @@
-// FILE: app/(dashboard)/sales/new-order/page.tsx
 import { NewOrderForm } from "@/components/sales/new-order/new-order-form";
+import { getClients, getProducts } from "@/lib/api";
 
-export default function NewOrderPage() {
+export default async function NewOrderPage() {
+  const clients = await getClients();
+  const products = await getProducts();
+  
   return (
     <div className="h-full flex flex-col gap-4">
       <div className="flex-shrink-0">
@@ -11,7 +14,7 @@ export default function NewOrderPage() {
          </p>
       </div>
       <div className="flex-grow min-h-0">
-        <NewOrderForm />
+        <NewOrderForm clients={clients} products={products} />
       </div>
     </div>
   );

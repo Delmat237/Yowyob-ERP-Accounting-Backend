@@ -1,4 +1,3 @@
-// FILE: types/sales.ts
 export interface ClientSummary {
   id: string;
   name: string;
@@ -38,9 +37,9 @@ export interface Order {
   orderDate: Date;
   deliveryDate?: Date;
   endDate?: Date;
-  salesperson?: string; // Commercial
+  salesperson?: string;
   notes?: string;
-  motif?: string; // Motif
+  motif?: string;
   items: OrderItem[];
   totalHT: number;
   totalDiscount: number;
@@ -53,7 +52,7 @@ export interface Order {
 
 export interface OrderJournalEntry {
     id: string;
-    blNumber: string; // No BL
+    blNumber: string;
     clientName: string;
     amountHT: number;
     discount: number;
@@ -74,7 +73,7 @@ export interface Payment {
   notes?: string;
 }
 
-export type InvoiceStatus = 'Non payée' | 'Partiellement payée' | 'Payée' | 'Annulée';
+export type InvoiceStatus = 'NP' | 'PP' | 'P' | 'A';
 
 export interface Invoice {
   id: string;
@@ -93,5 +92,5 @@ export interface Invoice {
   totalTVA: number;
   totalTTC: number;
   totalPaid: number;
-  balanceDue: number; // Solde restant
+  balanceDue: number;
 }
