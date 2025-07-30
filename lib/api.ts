@@ -1,6 +1,7 @@
-import { Client, Product } from "@/types/core";
+import { Client, Product, Supplier } from "@/types/core";
 import { Profile, SystemAudit, User } from "@/types/personnel";
 import { Invoice, Order, OrderJournalEntry } from "@/types/sales";
+import { GeneralOptions, FiscalYear } from "@/types/settings";
 import { Warehouse, StockMovement, Inventory } from "@/types/stock";
 
 const API_BASE_URL = "http://localhost:3001";
@@ -78,3 +79,18 @@ export const updateProfile = (id: string, data: Partial<Profile>): Promise<Profi
 export const deleteProfile = (id: string): Promise<void> => apiRequest<void>(`/profiles/${id}`, 'DELETE');
 
 export const getSystemAudits = (): Promise<SystemAudit[]> => apiRequest<SystemAudit[]>('/systemAudits');
+
+export const getSuppliers = (query?: string): Promise<Supplier[]> => apiRequest<Supplier[]>(`/suppliers${query ? `?q=${query}` : ''}`);
+export const createSupplier = (data: Omit<Supplier, 'id'>): Promise<Supplier> => apiRequest<Supplier>("/suppliers", 'POST', data);
+export const updateSupplier = (id: string, data: Partial<Supplier>): Promise<Supplier> => apiRequest<Supplier>(`/suppliers/${id}`, 'PATCH', data);
+export const deleteSupplier = (id: string): Promise<void> => apiRequest<void>(`/suppliers/${id}`, 'DELETE');
+
+export const getGeneralOptions = async (): Promise<GeneralOptions> => {
+    const options = await apiRequest<GeneralOptions[]>('/generalOptions');
+    return options[0];
+};
+export const updateGeneralOptions = (data: GeneralOptions): Promise<GeneralOptions> => apiRequest<GeneralOptions>('/generalOptions/main', 'PUT', data);
+
+export const getFiscalYears = (): Promise<FiscalYear[]> => apiRequest<FiscalYear[]>('/fiscalYears');
+export const createFiscalYear = (data: Omit<FiscalYear, 'id'>): Promise<FiscalYear> => apiRequest<FiscalYear>('/fiscalYears', 'POST', data);
+export const updateFiscalYear = (id: string, data: Partial<FiscalYear>): Promise<FiscalYear> => apiRequest<FiscalYear>(`/fiscalYears/${id}`, 'PATCH', data);

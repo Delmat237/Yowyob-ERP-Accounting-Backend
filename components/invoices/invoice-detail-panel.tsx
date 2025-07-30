@@ -1,4 +1,3 @@
-// FILE: components/invoices/invoice-detail-panel.tsx
 import { Invoice, OrderItem, Payment } from "@/types/sales";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,9 +18,10 @@ import { Separator } from "@/components/ui/separator";
 
 interface InvoiceDetailPanelProps {
   invoice: Invoice;
+  onPrint: () => void;
 }
 
-export function InvoiceDetailPanel({ invoice }: InvoiceDetailPanelProps) {
+export function InvoiceDetailPanel({ invoice, onPrint }: InvoiceDetailPanelProps) {
   const paymentForm = useForm({ defaultValues: { date: new Date(), amount: invoice.balanceDue } });
   const cancelForm = useForm();
 
@@ -41,15 +41,15 @@ export function InvoiceDetailPanel({ invoice }: InvoiceDetailPanelProps) {
 
   return (
     <Card className="h-full flex flex-col">
-      <CardHeader className="flex flex-shrink-0 justify-between mb-2">
+      <CardHeader className="flex flex-row flex-shrink-0 justify-between items-start mb-2">
         <div>
           <CardTitle>Facture N° {invoice.invoiceNumber}</CardTitle>
           <CardDescription>
-            Client: {invoice.client.name} - Date: {format(invoice.orderDate, "dd MMMM yyyy")}
+            Client: {invoice.client.name} - Date: {format(new Date(invoice.orderDate), "dd MMMM yyyy")}
           </CardDescription>
         </div>
-        <div className="flex justify-end">
-          <Button variant="outline"><Printer className="mr-2 h-4 w-4" />Imprimer la facture</Button>
+        <div className="flex justify-end no-print">
+          <Button variant="outline" onClick={onPrint}><Printer className="mr-2 h-4 w-4" />Imprimer la facture</Button>
         </div>
       </CardHeader>
       <div className="flex-shrink-0 grid grid-cols-4 gap-2 px-4">
@@ -61,8 +61,8 @@ export function InvoiceDetailPanel({ invoice }: InvoiceDetailPanelProps) {
       <Tabs defaultValue="details" className="flex-grow flex flex-col min-h-0">
         <TabsList className="mx-6 flex-shrink-0">
           <TabsTrigger value="details"><FileText className="mr-2 h-4 w-4" />Détails</TabsTrigger>
-          <TabsTrigger value="payment" disabled={invoice.status === "Annulée" || invoice.status === "Payée"}><HandCoins className="mr-2 h-4 w-4" />Règlement</TabsTrigger>
-          <TabsTrigger value="cancel" disabled={invoice.status === "Annulée"}><Ban className="mr-2 h-4 w-4" />Annulation</TabsTrigger>
+          <TabsTrigger value="payment" disabled={invoice.status === "A" || invoice.status === "P"}><HandCoins className="mr-2 h-4 w-4" />Règlement</TabsTrigger>
+          <TabsTrigger value="cancel" disabled={invoice.status === "A"}><Ban className="mr-2 h-4 w-4" />Annulation</TabsTrigger>
         </TabsList>
 
         <TabsContent value="details" className="flex-grow p-6 pt-4 flex flex-col gap-4 overflow-y-auto">

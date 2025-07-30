@@ -175,7 +175,7 @@
       },
       "orderDate": "2024-05-20T10:00:00.000Z",
       "dueDate": "2024-06-20T10:00:00.000Z",
-      "status": "Partiellement payée",
+      "status": "PP",
       "items": [
         {
           "id": "1",
@@ -215,7 +215,7 @@
       },
       "orderDate": "2024-05-22T14:30:00.000Z",
       "dueDate": "2024-05-22T14:30:00.000Z",
-      "status": "Payée",
+      "status": "P",
       "items": [
         {
           "id": "2",
@@ -255,7 +255,7 @@
       },
       "orderDate": "2024-05-15T09:00:00.000Z",
       "dueDate": "2024-06-15T09:00:00.000Z",
-      "status": "Non payée",
+      "status": "NP",
       "items": [
         {
           "id": "3",
@@ -288,7 +288,7 @@
       },
       "orderDate": "2024-04-10T11:00:00.000Z",
       "dueDate": "2024-05-10T11:00:00.000Z",
-      "status": "Annulée",
+      "status": "A",
       "items": [
         {
           "id": "4",
@@ -771,6 +771,138 @@
       "action": "Ouverture de l'écran de saisie de Vente",
       "date": "2025-05-28T16:31:51.000Z",
       "remarks": "RAS"
+    }
+  ],
+  "suppliers": [
+    {
+      "id": "sup-001",
+      "code": "CIMENCAM",
+      "companyName": "Cimenteries du Cameroun",
+      "contactPerson": "M. Biloa",
+      "phone": "+237 222221133",
+      "email": "achats.cimencam@lafarge.com",
+      "balance": -25000000,
+      "isActive": true
+    },
+    {
+      "id": "sup-002",
+      "code": "PROMETAL",
+      "companyName": "PROMETAL Aciérie",
+      "contactPerson": "Service Commercial",
+      "phone": "+237 699123456",
+      "email": "ventes@prometal.cm",
+      "balance": 0,
+      "isActive": true
+    },
+    {
+      "id": "sup-003",
+      "code": "SOFAP",
+      "companyName": "SOFAP Peintures",
+      "contactPerson": "Mme. Ango",
+      "phone": "+237 677987654",
+      "email": "contact@sofap.net",
+      "balance": -1200000,
+      "isActive": true
+    },
+    {
+      "id": "sup-004",
+      "code": "QUIFEG",
+      "companyName": "Quincaillerie FERT GUINEA",
+      "contactPerson": "Mamadou Diallo",
+      "phone": "+224 622112233",
+      "email": "info@quifeg.com",
+      "balance": 0,
+      "isActive": false
+    }
+  ],
+  "generalOptions": [
+    {
+      "id": "main",
+      "general": {
+        "autoInvoiceFromDelivery": true,
+        "autoAccountingInterface": false,
+        "autoTreasuryInterface": true,
+        "printTradeRegistryOnInvoice": true,
+        "useCashRegisterPrinter": false,
+        "allowEntriesInClosedPeriod": false,
+        "decimalPlaces": 2,
+        "maxTechnicalMargin": 60,
+        "dateFormat": "dd/MM/yyyy",
+        "isSupermarket": false,
+        "modifySalePriceOnPurchase": true
+      },
+      "sales": {
+        "canNegotiatePrice": false,
+        "priceIncludesVAT": true,
+        "allowMultiWarehouseSales": true,
+        "stockValueDisplay": "%",
+        "allowTechnicalInvoices": true,
+        "allowDocumentChanges": false,
+        "maxDiscountRate": 10,
+        "cancellationDays": {
+          "invoices": "10",
+          "creditNotes": "9",
+          "deliveries": 0,
+          "purchases": 10
+        }
+      },
+      "termInvoicing": {
+        "vatInvoicePrefix": "",
+        "vatInvoiceSuffix": "/04",
+        "vatInvoiceLength": 7,
+        "noVatInvoicePrefix": "",
+        "noVatInvoiceSuffix": "",
+        "noVatInvoiceLength": 7,
+        "leftSignature": "Client",
+        "rightSignature": "Direction",
+        "middleSignature": "Magasinier"
+      },
+      "cashInvoicing": {
+        "vatInvoicePrefix": "",
+        "vatInvoiceSuffix": "M/04",
+        "vatInvoiceLength": 7,
+        "noVatInvoicePrefix": "",
+        "noVatInvoiceSuffix": "/NT",
+        "noVatInvoiceLength": 7,
+        "useCashRegisterBalance": true
+      },
+      "printing": {
+        "previewBeforePrint": true,
+        "orientation": "Paysage",
+        "width": 21,
+        "height": 24,
+        "format": "A4"
+      }
+    }
+  ],
+  "fiscalYears": [
+    {
+      "id": "fy-2023",
+      "name": "Exercice 2023",
+      "startDate": "2023-01-01T00:00:00.000Z",
+      "endDate": "2023-12-31T23:59:59.000Z",
+      "status": "Clôturé"
+    },
+    {
+      "id": "fy-2024",
+      "name": "Exercice 2024",
+      "startDate": "2024-01-01T00:00:00.000Z",
+      "endDate": "2024-12-31T23:59:59.000Z",
+      "status": "En cours"
+    },
+    {
+      "id": "fy-2025",
+      "name": "Exercice 2025",
+      "startDate": "2025-01-01T00:00:00.000Z",
+      "endDate": "2025-12-31T23:59:59.000Z",
+      "status": "Clôturé"
+    },
+    {
+      "id": "86cc",
+      "name": "Exercice 2025",
+      "startDate": "2024-12-31T23:00:00.000Z",
+      "endDate": "2025-12-31T23:00:00.000Z",
+      "status": "Ouvert"
     }
   ]
 }

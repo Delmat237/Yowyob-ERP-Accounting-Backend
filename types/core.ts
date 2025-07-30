@@ -27,10 +27,10 @@ export interface Product {
   name: string;
   family?: string;
   stock: number;
-  costPrice: number; // CPUP
-  salePrice: number; // Prix de Vente
-  wholesalePrice: number; // Prix de Gros
-  semiWholesalePrice: number; // Prix Demi-Gros
+  costPrice: number;
+  salePrice: number;
+  wholesalePrice: number;
+  semiWholesalePrice: number;
   mainSupplier?: string;
   purchaseUnit?: string;
   saleUnit?: string;
@@ -40,4 +40,16 @@ export interface Product {
   isPerishable: boolean;
   isDiscountable: boolean;
   isActive: boolean;
+}
+
+export interface Supplier {
+  id: string;
+  code: string;
+  companyName: string;
+  contactPerson?: string;
+  phone?: string;
+  email?: string;
+  balance: number;
+  isActive: boolean;
+  notes?: string;
 }
