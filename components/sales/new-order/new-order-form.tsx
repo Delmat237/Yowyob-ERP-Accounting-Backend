@@ -135,9 +135,9 @@ export function NewOrderForm({ clients, products }: NewOrderFormProps) {
                 <div className="flex flex-col lg:flex-row gap-4">
                     <Card className="flex-1">
                         <CardHeader><CardTitle className="text-base">Ajouter un Article</CardTitle></CardHeader>
-                        <CardContent className="space-y-4 px-4">
+                        <CardContent className="space-y-0 px-4">
                             <FormItem><FormLabel>Article</FormLabel><Combobox options={productOptions} value={selectedProductId} onChange={setSelectedProductId} placeholder="Rechercher un article..." searchPlaceholder="Taper le nom ou le code..."/></FormItem>
-                            <FormItem><FormLabel>Quantité</FormLabel><Input type="number" value={quantity} onChange={e => setQuantity(Math.max(1, Number(e.target.value)))} min={1} /></FormItem>
+                            <FormItem className="flex"><FormLabel>Quantité</FormLabel><Input type="number" value={quantity} onChange={e => setQuantity(Math.max(1, Number(e.target.value)))} min={1} /></FormItem>
                             <div className="flex justify-end pt-2">
                                 <Button type="button" onClick={handleAddArticle} disabled={!selectedProductId}><PlusCircle className="mr-2 h-4 w-4" />Ajouter</Button>
                             </div>

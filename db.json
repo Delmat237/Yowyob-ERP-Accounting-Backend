@@ -70,6 +70,18 @@
       "pricingLevels": [
         "detail"
       ]
+    },
+    {
+      "id": "516b",
+      "companyName": "taylor PIO",
+      "code": "A2000",
+      "contactPerson": "11111111",
+      "phone": "651230157",
+      "email": "igormogou86@gmail.com",
+      "isActive": true,
+      "isTaxable": true,
+      "balance": 0,
+      "notes": "TS"
     }
   ],
   "products": [
@@ -623,13 +635,13 @@
         "stock_journal": {
           "read": true,
           "create": true,
-          "update": true,
+          "update": false,
           "delete": true
         },
         "stock_entries": {
           "read": true,
           "create": true,
-          "update": true,
+          "update": false,
           "delete": true
         },
         "stock_inventory": {
@@ -637,7 +649,8 @@
           "create": true,
           "update": true,
           "delete": true
-        }
+        },
+        "sales_new_order": {}
       },
       "authorizedPrices": [
         "PVD",

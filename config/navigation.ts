@@ -38,7 +38,7 @@ export const modules: Record<ModuleKey, Module> = {
     name: "Ventes & Tiers",
     icon: ShoppingCart,
     sidebarLinks: [
-      { title: "Tableau de Bord", icon: LayoutDashboard, href: "/" },
+      { title: "Tableau de Bord", icon: LayoutDashboard, href: "/dashboard" },
       { title: "Saisie Commande", icon: PenBox, href: "/sales/new-order" },
       { title: "Journal Commandes", icon: BookOpen, href: "/sales/order-journal" },
       { title: "Gestion Factures", icon: FileText, href: "/invoices" },
