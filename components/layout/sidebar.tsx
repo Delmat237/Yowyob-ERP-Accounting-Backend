@@ -6,36 +6,85 @@ import { useSidebar } from "@/hooks/useSidebar";
 import { useNavigationStore } from "@/hooks/use-navigation-store";
 import { modules } from "@/config/navigation";
 import { Button } from "../ui/button";
-import { ChevronsLeft } from "lucide-react";
+import { PenSquare, ShoppingCart, Warehouse, UserCog, Settings } from "lucide-react";
+import { Separator } from "../ui/separator";
+import { useCompose } from "@/hooks/use-compose-store";
+import { CustomerForm } from "../customers/customer-form";
+import { ProductForm } from "../products/product-form";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
-export function Sidebar({ className }: SidebarProps) {
+const moduleIcons = {
+    ventes: ShoppingCart,
+    stock: Warehouse,
+    personnel: UserCog,
+    parametres: Settings
+};
+
+export function Sidebar() {
   const { isCollapsed, toggle } = useSidebar();
-  const { activeModule } = useNavigationStore();
+  const { activeModule, setActiveModule } = useNavigationStore();
+  const { onOpen } = useCompose();
 
-  // Récupère les liens de la sidebar pour le module actif
-  const currentLinks = modules[activeModule]?.sidebarLinks || [];
-  const currentModule = modules[activeModule];
+  const currentModuleData = modules[activeModule];
+  
+  const handleCompose = () => {
+    switch(activeModule) {
+      case 'ventes':
+        onOpen({ title: 'Nouveau Client', content: <CustomerForm initialData={null} onSave={() => {}} onCancel={() => {}} />});
+        break;
+      case 'stock':
+        onOpen({ title: 'Nouvel Article', content: <ProductForm initialData={null} onSave={() => {}} onCancel={() => {}} />});
+        break;
+      default:
+        console.log("Aucune action 'Nouveau' pour ce module.");
+    }
+  };
 
   return (
     <aside
       className={cn(
-        `hidden lg:block fixed left-0 top-14 z-20 h-[calc(100vh-3.5rem)] -translate-x-full transition-[width] ease-in-out duration-300 lg:translate-x-0 border-r`,
-        isCollapsed === false ? "w-[250px]" : "w-[72px]",
-        className
+        "h-screen bg-[#f6f8fc] flex transition-all duration-300 ",
+        isCollapsed ? "w-20" : "w-72"
       )}
     >
-      <div className="relative h-full flex flex-col">
-        {/* Bouton pour réduire/agrandir */}
-        <div className="absolute -right-5 top-4">
-           <Button variant="outline" size="icon" className="rounded-full h-8 w-8" onClick={toggle}>
-               <ChevronsLeft className={cn("h-4 w-4 transition-transform", !isCollapsed && "rotate-180")}/>
-           </Button>
+        <div className="w-15 flex-shrink-0 flex flex-col items-center py-4 border-r bg-white">
+            <TooltipProvider delayDuration={0}>
+                {Object.entries(modules).map(([key, module]) => {
+                    const Icon = module.icon;
+                    return (
+                        <Tooltip key={key}>
+                            <TooltipTrigger asChild>
+                                <Button 
+                                    variant={activeModule === key ? "secondary" : "ghost"}
+                                    size="icon" 
+                                    className="h-12 w-12 flex-col gap-3 text-xs"
+                                    onClick={() => setActiveModule(key as any)}
+                                >
+                                    <Icon className="h-5 w-5"/>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent side="right">
+                                <p>{module.name}</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    )
+                })}
+            </TooltipProvider>
         </div>
         
-        <div className="py-4">
-          <MainNav isCollapsed={isCollapsed} links={currentLinks} />
-        </div>
-      </div>
+        {!isCollapsed && (
+            <div className="flex-1 flex flex-col pt-5">
+                <div className="px-4 mb-4">
+                     <Button onClick={handleCompose} className="w-full h-12 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white shadow-lg font-semibold">
+                        <PenSquare className="mr-3" />
+                        {currentModuleData.composeActionLabel}
+                    </Button>
+                </div>
+                <div className="flex-1 overflow-y-auto px-2">
+                    <MainNav links={currentModuleData.sidebarLinks} />
+                </div>
+            </div>
+        )}
     </aside>
   );
 }

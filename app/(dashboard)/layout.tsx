@@ -1,10 +1,11 @@
-// FILE: app/(dashboard)/layout.tsx
 "use client";
 
 import { Header } from "@/components/layout/header";
 import { Sidebar } from "@/components/layout/sidebar";
 import { useSidebar } from "@/hooks/useSidebar";
 import { cn } from "@/lib/utils";
+import React from "react";
+import { ComposeWindow } from "@/components/ui/compose-window";
 
 export default function DashboardLayout({
   children,
@@ -14,19 +15,15 @@ export default function DashboardLayout({
   const { isCollapsed } = useSidebar();
 
   return (
-    <>
-      <Header />
+    <div className="h-screen w-screen overflow-hidden flex bg-[#f6f8fc]">
       <Sidebar />
-      <main
-        className={cn(
-          "h-screen bg-muted/40 pt-14 transition-[margin-left] ease-in-out duration-300",
-          isCollapsed === false ? "lg:ml-[250px]" : "lg:ml-[72px]"
-        )}
-      >
-        <div className="h-full w-full p-4">
+      <div className="flex-1 flex flex-col min-w-0">
+        <Header />
+        <main className="flex-1 overflow-y-auto p-4 pt-2">
           {children}
-        </div>
-      </main>
-    </>
+        </main>
+      </div>
+      <ComposeWindow />
+    </div>
   );
 }

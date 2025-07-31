@@ -3,66 +3,34 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { buttonVariants } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { SidebarLink } from "@/config/navigation";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
 interface MainNavProps {
-  isCollapsed: boolean;
-  links: SidebarLink[]; // Accepte les liens en tant que prop
+  links: SidebarLink[];
 }
 
-export function MainNav({ isCollapsed, links }: MainNavProps) {
+export function MainNav({ links }: MainNavProps) {
   const pathname = usePathname();
 
   return (
-    <TooltipProvider delayDuration={0}>
-      <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
-        {links.map((link, index) =>
-          isCollapsed ? (
-            <Tooltip key={index} delayDuration={0}>
-              <TooltipTrigger asChild>
-                <Link
-                  href={link.href}
-                  className={cn(
-                    buttonVariants({
-                      variant: pathname === link.href ? "default" : "ghost",
-                      size: "icon",
-                    }),
-                    "h-9 w-9"
-                  )}
-                >
-                  <link.icon className="h-4 w-4" />
-                  <span className="sr-only">{link.title}</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="flex items-center gap-4">
-                {link.title}
-              </TooltipContent>
-            </Tooltip>
-          ) : (
-            <Link
-              key={index}
-              href={link.href}
-              className={cn(
-                buttonVariants({
-                  variant: pathname === link.href ? "default" : "ghost",
-                  size: "sm",
-                }),
-                "justify-start"
-              )}
-            >
-              <link.icon className="mr-2 h-4 w-4" />
-              {link.title}
-            </Link>
-          )
-        )}
-      </nav>
-    </TooltipProvider>
+    <nav className="grid gap-1 p-2">
+      {links.map((link, index) => {
+        const isActive = pathname === link.href;
+        return (
+          <Link
+            key={index}
+            href={link.href}
+            className={cn(
+              "flex items-center gap-3 rounded-r-full rounded-l-none px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200/50",
+              isActive ? "bg-blue-100 text-blue-800 font-semibold hover:bg-blue-100" : "hover:bg-gray-200"
+            )}
+          >
+            <link.icon className={cn("h-5 w-5", isActive ? "text-blue-700" : "text-gray-600")} />
+            {link.title}
+          </Link>
+        );
+      })}
+    </nav>
   );
 }

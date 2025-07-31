@@ -4,29 +4,22 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Save, Trash2, X } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { Switch } from '../ui/switch';
 import React, { useEffect } from 'react';
 
 interface CustomerFormProps {
-    initialData: Client | null;
+    initialData: Partial<Client> | null;
     onSave: (data: Client) => void;
-    onDelete?: (id: string) => void;
-    onCancel: () => void;
 }
 
-export function CustomerForm({ initialData, onSave, onDelete, onCancel }: CustomerFormProps) {
+export function CustomerForm({ initialData, onSave }: CustomerFormProps) {
     const form = useForm<Client>({
-        defaultValues: initialData || { isActive: true, isTaxable: true, balance: 0 },
+        defaultValues: initialData || { companyName: '', code: '', contactPerson: '', phone: '', email: '', isActive: true, isTaxable: true, balance: 0 },
     });
-    const isNew = !initialData?.id;
-
+    
     useEffect(() => {
-        if (initialData) {
-            form.reset(initialData);
-        } else {
-            form.reset({ companyName: '', code: '', contactPerson: '', phone: '', email: '', isActive: true, isTaxable: true, balance: 0 });
-        }
+        form.reset(initialData || { companyName: '', code: '', contactPerson: '', phone: '', email: '', isActive: true, isTaxable: true, balance: 0 });
     }, [initialData, form]);
     
     const onSubmit = (data: Client) => {
@@ -35,27 +28,7 @@ export function CustomerForm({ initialData, onSave, onDelete, onCancel }: Custom
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="h-full flex flex-col bg-white">
-                <div className="p-6 border-b">
-                    <div className="flex items-center justify-between">
-                        <h2 className="text-xl font-semibold text-gray-900">
-                            {isNew ? "Nouveau Client" : "Profil Client"}
-                        </h2>
-                        {isNew && (
-                            <Button variant="ghost" size="icon" type="button" onClick={onCancel}>
-                                <X size={20} />
-                            </Button>
-                        )}
-                    </div>
-                    {initialData && (
-                        <p className="text-sm text-gray-600 mt-1">
-                            Solde: <span className={initialData.balance >= 0 ? 'text-green-600' : 'text-red-600'}>
-                                {initialData.balance.toLocaleString('fr-FR')} FCFA
-                            </span>
-                        </p>
-                    )}
-                </div>
-
+            <form onSubmit={form.handleSubmit(onSubmit)} className="h-full flex flex-col">
                 <div className="flex-1 overflow-y-auto p-6 space-y-4">
                     <FormField control={form.control} name="companyName" render={({ field }) => (
                         <FormItem><FormLabel>Raison sociale *</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
@@ -87,16 +60,10 @@ export function CustomerForm({ initialData, onSave, onDelete, onCancel }: Custom
                     </div>
                 </div>
 
-                <div className="p-6 border-t bg-gray-50 flex justify-end space-x-3">
-                    {!isNew && onDelete && (
-                         <Button type="button" variant="destructive" onClick={() => onDelete(initialData.id)}>
-                            <Trash2 size={16} />
-                            <span>Supprimer</span>
-                        </Button>
-                    )}
+                <div className="p-4 border-t bg-gray-50 flex justify-end">
                     <Button type="submit" disabled={form.formState.isSubmitting}>
-                        <Save size={16} />
-                        <span>{form.formState.isSubmitting ? "Enregistrement..." : (isNew ? "Enregistrer" : "Mettre à jour")}</span>
+                        <Save size={16} className="mr-2" />
+                        <span>{form.formState.isSubmitting ? "Enregistrement..." : "Enregistrer les modifications"}</span>
                     </Button>
                 </div>
             </form>

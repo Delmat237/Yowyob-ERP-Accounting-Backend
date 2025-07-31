@@ -55,7 +55,8 @@
       "pricingLevels": [
         "gros",
         "super-gros"
-      ]
+      ],
+      "notes": "test"
     },
     {
       "id": "cl-005",

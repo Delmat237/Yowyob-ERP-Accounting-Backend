@@ -1,18 +1,97 @@
-// FILE: app/(dashboard)/products/page.tsx
-import { ProductManagementView } from "@/components/products/product-management-view";
+"use client";
+
+import React, { useState, useEffect, useCallback } from 'react';
+import { Product } from '@/types/core';
+import { getProducts, createProduct, updateProduct, deleteProduct } from '@/lib/api';
+import { useCompose } from '@/hooks/use-compose-store';
+import { ProductForm } from '@/components/products/product-form';
+import { ProductListView } from '@/components/products/product-list-view';
+import { ProductDetailView } from '@/components/products/product-detail-view';
 
 export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+
+  const { onOpen, onClose } = useCompose();
+
+  const fetchAndSetProducts = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const data = await getProducts();
+      setProducts(data);
+      if (selectedProductId && !data.some(p => p.id === selectedProductId)) {
+        setSelectedProductId(null);
+      }
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [selectedProductId]);
+
+  useEffect(() => {
+    fetchAndSetProducts();
+  }, [fetchAndSetProducts]);
+
+  const handleSave = async (data: Product) => {
+    const isNew = !data.id;
+    try {
+      if (isNew) {
+        await createProduct(data);
+        onClose();
+      } else {
+        await updateProduct(data.id, data);
+      }
+      await fetchAndSetProducts();
+    } catch (error) {
+      console.error("Failed to save product", error);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer cet article ?")) {
+      try {
+        await deleteProduct(id);
+        handleBackToList();
+        await fetchAndSetProducts();
+      } catch (error) {
+        console.error("Failed to delete product:", error);
+      }
+    }
+  };
+  
+  const handleOpenCompose = () => {
+    onOpen({
+      title: "Nouvel Article",
+      content: <ProductForm onSave={handleSave} onCancel={onClose} initialData={null} />
+    });
+  };
+
+  const handleBackToList = () => {
+    setSelectedProductId(null);
+  };
+
+  const selectedProduct = products.find(p => p.id === selectedProductId);
+
+  if (selectedProductId && selectedProduct) {
+    return (
+      <ProductDetailView 
+        product={selectedProduct}
+        onSave={handleSave}
+        onDelete={handleDelete}
+        onBack={handleBackToList}
+      />
+    );
+  }
+
   return (
-     <div className="h-full flex flex-col gap-4">
-      <div className="flex-shrink-0">
-        <h1 className="text-xl lg:text-2xl font-bold tracking-tight">Gestion des Articles / Produits</h1>
-        <p className="text-muted-foreground text-sm">
-          Créez, recherchez et modifiez les articles de votre catalogue.
-        </p>
-      </div>
-      <div className="flex-grow min-h-0">
-        <ProductManagementView />
-      </div>
-    </div>
+    <ProductListView
+      products={products}
+      isLoading={isLoading}
+      onSelectProduct={setSelectedProductId}
+      onAddNew={handleOpenCompose}
+      onRefresh={fetchAndSetProducts}
+    />
   );
 }

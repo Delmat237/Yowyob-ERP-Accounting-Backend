@@ -6,30 +6,23 @@ import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Save, Trash2, X } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { Switch } from '../ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Separator } from '../ui/separator';
 
 interface ProductFormProps {
-    initialData: Product | null;
+    initialData: Partial<Product> | null;
     onSave: (data: Product) => void;
-    onDelete?: (id: string) => void;
-    onCancel: () => void;
 }
 
-export function ProductForm({ initialData, onSave, onDelete, onCancel }: ProductFormProps) {
+export function ProductForm({ initialData, onSave }: ProductFormProps) {
     const form = useForm<Product>({
-        defaultValues: initialData || { isActive: true, isDiscountable: true, isPerishable: false },
+        defaultValues: initialData || { name: '', code: '', family: '', mainSupplier: '', isActive: true, isDiscountable: true, isPerishable: false, stock: 0, costPrice: 0, salePrice: 0 },
     });
-    const isNew = !initialData?.id;
 
     useEffect(() => {
-        if (initialData) {
-            form.reset(initialData);
-        } else {
-            form.reset({ name: '', code: '', family: '', mainSupplier: '', isActive: true, isDiscountable: true, isPerishable: false });
-        }
+        form.reset(initialData || { name: '', code: '', family: '', mainSupplier: '', isActive: true, isDiscountable: true, isPerishable: false, stock: 0, costPrice: 0, salePrice: 0 });
     }, [initialData, form]);
 
     const onSubmit = (data: Product) => {
@@ -39,20 +32,6 @@ export function ProductForm({ initialData, onSave, onDelete, onCancel }: Product
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="h-full flex flex-col">
-                <div className="p-6 border-b border-gray-200">
-                    <div className="flex justify-between items-center">
-                        <h2 className="text-xl font-semibold text-gray-900">
-                            {isNew ? "Créer un nouvel article" : "Modifier l'article"}
-                        </h2>
-                        <Button variant="ghost" size="icon" type="button" onClick={onCancel}>
-                            <X className="h-5 w-5" />
-                        </Button>
-                    </div>
-                     <p className="text-gray-600 mt-1">
-                        {isNew ? "Remplissez les informations ci-dessous." : `Modification de ${initialData?.name}`}
-                    </p>
-                </div>
-                
                 <div className="flex-1 p-6 overflow-y-auto space-y-6">
                     <FormField control={form.control} name="name" render={({ field }) => (
                         <FormItem><FormLabel>Libellé de l'article *</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
@@ -81,9 +60,11 @@ export function ProductForm({ initialData, onSave, onDelete, onCancel }: Product
                     </div>
                 </div>
                 
-                <div className="p-6 border-t border-gray-200 bg-gray-50 flex justify-end space-x-3">
-                    {!isNew && onDelete && <Button type="button" variant="destructive" onClick={() => onDelete(initialData.id)}><Trash2 className="h-4 w-4 mr-2"/>Supprimer</Button>}
-                    <Button type="submit" disabled={form.formState.isSubmitting}><Save className="h-4 w-4 mr-2"/>{form.formState.isSubmitting ? 'Sauvegarde...' : (isNew ? "Enregistrer l'article" : "Mettre à jour")}</Button>
+                <div className="p-4 border-t border-gray-200 bg-gray-50 flex justify-end">
+                    <Button type="submit" disabled={form.formState.isSubmitting}>
+                        <Save className="h-4 w-4 mr-2"/>
+                        {form.formState.isSubmitting ? 'Sauvegarde...' : "Enregistrer les modifications"}
+                    </Button>
                 </div>
             </form>
         </Form>
