@@ -20,28 +20,28 @@ import {
 } from "@/components/ui/popover"
 
 export interface ComboboxOption {
-    value: string;
-    label: string;
+  value: string;
+  label: string;
 }
 
 interface ComboboxProps {
-    options: ComboboxOption[];
-    value?: string;
-    onChange: (value: string) => void;
-    placeholder?: string;
-    searchPlaceholder?: string;
-    emptyPlaceholder?: string;
-    disabled?: boolean;
+  options: ComboboxOption[];
+  value?: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  searchPlaceholder?: string;
+  emptyPlaceholder?: string;
+  disabled?: boolean;
 }
 
-export function Combobox({ 
-    options, 
-    value, 
-    onChange,
-    placeholder = "Sélectionner...",
-    searchPlaceholder = "Rechercher...",
-    emptyPlaceholder = "Aucun élément trouvé.",
-    disabled = false,
+export function Combobox({
+  options,
+  value,
+  onChange,
+  placeholder = "Sélectionner...",
+  searchPlaceholder = "Rechercher...",
+  emptyPlaceholder = "Aucun élément trouvé.",
+  disabled = false,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false)
 
@@ -65,9 +65,30 @@ export function Combobox({
       </PopoverTrigger>
       <PopoverContent className="w-[--radix-popover-trigger-width] p-0">
         <Command>
-          <CommandInput placeholder={searchPlaceholder} />
+          <CommandInput
+            placeholder={searchPlaceholder}
+            className="focus:outline-none focus:ring-0"
+          />
           <CommandList>
             <CommandEmpty>{emptyPlaceholder}</CommandEmpty>
+
+            {/* Option spéciale toujours visible */}
+            <CommandItem
+              value={placeholder}
+              onSelect={() => {
+                onChange("")
+                setOpen(false)
+              }}
+            >
+              <Check
+                className={cn(
+                  "mr-2 h-4 w-4",
+                  value === "" ? "opacity-100" : "opacity-0"
+                )}
+              />
+              {placeholder}
+            </CommandItem>
+
             <CommandGroup>
               {options.map((option) => (
                 <CommandItem

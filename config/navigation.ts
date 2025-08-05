@@ -13,7 +13,9 @@ import {
   FileClock,
   ShieldCheck,
   History,
-  PenSquare
+  PenSquare,
+  ArrowRightLeft,
+  Replace
 } from "lucide-react";
 
 export type SidebarLink = {
@@ -54,6 +56,8 @@ export const modules: Record<ModuleKey, Module> = {
     sidebarLinks: [
       { title: "État des Stocks", icon: PackageSearch, href: "/stock/status" },
       { title: "Mouvements", icon: PackagePlus, href: "/stock/entries" },
+      { title: "Transferts", icon: ArrowRightLeft, href: "/stock/transfer" },
+      { title: "Transformations", icon: Replace, href: "/stock/transformation" },
       { title: "Journal Mouvements", icon: FileClock, href: "/stock/journal" },
       { title: "Inventaire", icon: BookOpen, href: "/stock/inventory" },
       { title: "Articles", icon: ShoppingCart, href: "/products" },

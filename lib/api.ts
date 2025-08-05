@@ -2,7 +2,7 @@ import { Client, Product, Supplier } from "@/types/core";
 import { Profile, SystemAudit, User } from "@/types/personnel";
 import { Invoice, Order, OrderJournalEntry } from "@/types/sales";
 import { GeneralOptions, FiscalYear } from "@/types/settings";
-import { Warehouse, StockMovement, Inventory } from "@/types/stock";
+import { Warehouse, StockMovement, Inventory, WarehouseTransfer, ProductTransformation } from "@/types/stock";
 
 const API_BASE_URL = "http://localhost:3001";
 
@@ -62,12 +62,19 @@ export const createOrder = (data: Omit<Order, 'id'>): Promise<Order> => apiReque
 export const updateOrder = (id: string, data: Partial<Order>): Promise<Order> => apiRequest<Order>(`/orders/${id}`, 'PATCH', data);
 
 export const getWarehouses = (): Promise<Warehouse[]> => apiRequest<Warehouse[]>('/warehouses');
-export const getStockMovements = (): Promise<StockMovement[]> => apiRequest<StockMovement[]>('/stockMovements?_expand=warehouse');
+export const getStockMovements = (): Promise<StockMovement[]> => apiRequest<StockMovement[]>('/stockMovements');
 export const createStockMovement = (data: Omit<StockMovement, 'id'>): Promise<StockMovement> => apiRequest<StockMovement>('/stockMovements', 'POST', data);
+
+export const getWarehouseTransfers = (): Promise<WarehouseTransfer[]> => apiRequest<WarehouseTransfer[]>('/warehouseTransfers');
+export const createWarehouseTransfer = (data: Omit<WarehouseTransfer, 'id'>): Promise<WarehouseTransfer> => apiRequest<WarehouseTransfer>('/warehouseTransfers', 'POST', data);
+
+export const getProductTransformations = (): Promise<ProductTransformation[]> => apiRequest<ProductTransformation[]>('/productTransformations');
+export const createProductTransformation = (data: Omit<ProductTransformation, 'id'>): Promise<ProductTransformation> => apiRequest<ProductTransformation>('/productTransformations', 'POST', data);
 
 export const getInventories = (): Promise<Inventory[]> => apiRequest<Inventory[]>('/inventories');
 export const createInventory = (data: Omit<Inventory, 'id'>): Promise<Inventory> => apiRequest<Inventory>('/inventories', 'POST', data);
 export const updateInventory = (id: string, data: Partial<Inventory>): Promise<Inventory> => apiRequest<Inventory>(`/inventories/${id}`, 'PATCH', data);
+export const deleteInventory = (id: string): Promise<void> => apiRequest<void>(`/inventories/${id}`, 'DELETE');
 
 export const getUsers = (): Promise<User[]> => apiRequest<User[]>('/users');
 export const createUser = (data: Omit<User, 'id' | 'creationDate'>): Promise<User> => apiRequest<User>('/users', 'POST', { ...data, creationDate: new Date().toISOString() });

@@ -110,7 +110,7 @@ export function StockMovementForm({ products, warehouses }: StockMovementFormPro
     return (
         <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className="h-full flex gap-4">
-                <div className="flex flex-col h-full align-center items-center w-[200] gap-4">
+                <div className="flex flex-col h-full gap-4">
                     <Card>
                         <CardHeader><CardTitle>En-tête Gestion Stock</CardTitle></CardHeader>
                         <CardContent className='grid grid-cols-1 md:grid-cols-2 gap-4'>
@@ -123,10 +123,10 @@ export function StockMovementForm({ products, warehouses }: StockMovementFormPro
 
                     <Card>
                         <CardHeader><CardTitle>Critères de choix d'un article</CardTitle></CardHeader>
-                        <CardContent className='grid grid-cols-2 gap-4'>
+                        <CardContent className='grid grid-cols-2 gap-6'>
                             <div className='flex-grow'><Label>Code</Label><Combobox options={productOptions} value={selectedProductId} onChange={setSelectedProductId} placeholder="Rechercher un article..."/></div>
                             <div><Label>En stock</Label><Input value={selectedProduct?.stock ?? 0} readOnly className="w-24 bg-muted" /></div>
-                            <div><Label>Quantité</Label><Input type="number" value={quantity} onChange={e => setQuantity(Number(e.target.value))} className="w-24" /></div>
+                            <div className='w-full'><Label>Quantité</Label><Input type="number" value={quantity} onChange={e => setQuantity(Number(e.target.value))} className="w-24" /></div>
                             <div><Label>P.U.</Label><Input value={selectedProduct?.costPrice.toLocaleString() ?? 0} readOnly className="w-32 bg-muted" /></div>
                             <Button type="button" onClick={handleAddItem} disabled={!selectedProduct}><Plus className="mr-2 h-4 w-4"/>Ajouter</Button>
                         </CardContent>

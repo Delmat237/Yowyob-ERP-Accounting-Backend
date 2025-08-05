@@ -91,7 +91,7 @@
       "code": "CIM-LION-42R",
       "name": "Ciment 'Lion' 42.5R",
       "family": "Cimenterie",
-      "stock": 1,
+      "stock": -2,
       "costPrice": 4800,
       "salePrice": 5500,
       "wholesalePrice": 5200,
@@ -99,14 +99,14 @@
       "mainSupplier": "CIMENCAM",
       "isPerishable": false,
       "isDiscountable": true,
-      "isActive": true
+      "isActive": false
     },
     {
       "id": "prod-002",
       "code": "TOL-BAC-2M",
       "name": "Tôle Bac Acier 2m (0.35mm)",
       "family": "Tôlerie",
-      "stock": 1,
+      "stock": 9,
       "costPrice": 2900,
       "salePrice": 3500,
       "wholesalePrice": 3200,
@@ -136,7 +136,7 @@
       "code": "FER-HA8",
       "name": "Fer à béton HA8",
       "family": "Ferraillage",
-      "stock": 1,
+      "stock": 3,
       "costPrice": 3500,
       "salePrice": 4000,
       "wholesalePrice": 3800,
@@ -151,7 +151,7 @@
       "code": "CAB-TH-2.5",
       "name": "Câble électrique TH 2.5mm (100m)",
       "family": "Electricité",
-      "stock": 3,
+      "stock": 2,
       "costPrice": 22000,
       "salePrice": 25000,
       "wholesalePrice": 24000,
@@ -166,7 +166,7 @@
       "code": "PVC-P-110",
       "name": "Tuyau PVC Pression D110",
       "family": "Plomberie",
-      "stock": 2,
+      "stock": 4,
       "costPrice": 8500,
       "salePrice": 9500,
       "wholesalePrice": 9000,
@@ -485,41 +485,24 @@
           "costPrice": 4800
         }
       ]
+    },
+    {
+      "id": "ed2a",
+      "type": "entry",
+      "reference": "ENTRY-1754325328493",
+      "date": "2025-08-04T16:35:01.692Z",
+      "warehouseId": "wh-003",
+      "notes": "",
+      "items": [
+        {
+          "productId": "prod-004",
+          "quantity": 1,
+          "costPrice": 3500
+        }
+      ]
     }
   ],
   "inventories": [
-    {
-      "id": "inv-s-001",
-      "reference": "INV-2024-001",
-      "warehouseId": "wh-001",
-      "date": "2024-05-29T00:00:00.000Z",
-      "status": "En cours",
-      "type": "Spontané",
-      "notes": "Inventaire de contrôle avant livraison",
-      "items": [
-        {
-          "productId": "prod-001",
-          "productCode": "CIM-LION-42R",
-          "productName": "Ciment 'Lion' 42.5R",
-          "theoreticalQty": 100,
-          "physicalQty": 100
-        },
-        {
-          "productId": "prod-002",
-          "productCode": "TOL-BAC-2M",
-          "productName": "Tôle Bac Acier 2m (0.35mm)",
-          "theoreticalQty": 250,
-          "physicalQty": 248
-        },
-        {
-          "productId": "prod-006",
-          "productCode": "PVC-P-110",
-          "productName": "Tuyau PVC Pression D110",
-          "theoreticalQty": 120,
-          "physicalQty": null
-        }
-      ]
-    },
     {
       "id": "inv-s-002",
       "reference": "INV-2023-ANNUEL",
@@ -579,6 +562,242 @@
           "productName": "Tuyau PVC Pression D110",
           "theoreticalQty": 120,
           "physicalQty": 2
+        }
+      ]
+    },
+    {
+      "id": "8c53",
+      "reference": "INV-wh-002-1754312393596",
+      "warehouseId": "wh-002",
+      "date": "2025-08-04T12:59:53.596Z",
+      "status": "Validé",
+      "type": "Spontané",
+      "items": [
+        {
+          "productId": "prod-001",
+          "productCode": "CIM-LION-42R",
+          "productName": "Ciment 'Lion' 42.5R",
+          "theoreticalQty": 1,
+          "physicalQty": 1
+        },
+        {
+          "productId": "prod-002",
+          "productCode": "TOL-BAC-2M",
+          "productName": "Tôle Bac Acier 2m (0.35mm)",
+          "theoreticalQty": 1,
+          "physicalQty": 1
+        },
+        {
+          "productId": "prod-003",
+          "productCode": "PEI-SEIG-15L",
+          "productName": "Peinture Acrylique 'Seigneurie' Mat 15L",
+          "theoreticalQty": 1,
+          "physicalQty": 1
+        },
+        {
+          "productId": "prod-004",
+          "productCode": "FER-HA8",
+          "productName": "Fer à béton HA8",
+          "theoreticalQty": 1,
+          "physicalQty": 1
+        },
+        {
+          "productId": "prod-005",
+          "productCode": "CAB-TH-2.5",
+          "productName": "Câble électrique TH 2.5mm (100m)",
+          "theoreticalQty": 3,
+          "physicalQty": 3
+        },
+        {
+          "productId": "prod-006",
+          "productCode": "PVC-P-110",
+          "productName": "Tuyau PVC Pression D110",
+          "theoreticalQty": 2,
+          "physicalQty": 2
+        }
+      ]
+    },
+    {
+      "id": "47bb",
+      "reference": "INV-wh-002-1754312447025",
+      "warehouseId": "wh-002",
+      "date": "2025-08-04T13:00:47.025Z",
+      "status": "Validé",
+      "type": "Annuel",
+      "items": [
+        {
+          "productId": "prod-001",
+          "productCode": "CIM-LION-42R",
+          "productName": "Ciment 'Lion' 42.5R",
+          "theoreticalQty": 1,
+          "physicalQty": 1
+        },
+        {
+          "productId": "prod-002",
+          "productCode": "TOL-BAC-2M",
+          "productName": "Tôle Bac Acier 2m (0.35mm)",
+          "theoreticalQty": 1,
+          "physicalQty": 1
+        },
+        {
+          "productId": "prod-003",
+          "productCode": "PEI-SEIG-15L",
+          "productName": "Peinture Acrylique 'Seigneurie' Mat 15L",
+          "theoreticalQty": 1,
+          "physicalQty": 1
+        },
+        {
+          "productId": "prod-004",
+          "productCode": "FER-HA8",
+          "productName": "Fer à béton HA8",
+          "theoreticalQty": 1,
+          "physicalQty": 1
+        },
+        {
+          "productId": "prod-005",
+          "productCode": "CAB-TH-2.5",
+          "productName": "Câble électrique TH 2.5mm (100m)",
+          "theoreticalQty": 3,
+          "physicalQty": 3
+        },
+        {
+          "productId": "prod-006",
+          "productCode": "PVC-P-110",
+          "productName": "Tuyau PVC Pression D110",
+          "theoreticalQty": 2,
+          "physicalQty": 2
+        }
+      ]
+    },
+    {
+      "id": "bd72",
+      "reference": "INV-wh-001-1754325628908",
+      "warehouseId": "wh-001",
+      "date": "2025-08-04T16:40:28.908Z",
+      "status": "Validé",
+      "type": "Spontané",
+      "items": [
+        {
+          "productId": "prod-001",
+          "productCode": "CIM-LION-42R",
+          "productName": "Ciment 'Lion' 42.5R",
+          "theoreticalQty": -2,
+          "physicalQty": -2
+        },
+        {
+          "productId": "prod-002",
+          "productCode": "TOL-BAC-2M",
+          "productName": "Tôle Bac Acier 2m (0.35mm)",
+          "theoreticalQty": 9,
+          "physicalQty": 9
+        },
+        {
+          "productId": "prod-003",
+          "productCode": "PEI-SEIG-15L",
+          "productName": "Peinture Acrylique 'Seigneurie' Mat 15L",
+          "theoreticalQty": 1,
+          "physicalQty": 1
+        },
+        {
+          "productId": "prod-004",
+          "productCode": "FER-HA8",
+          "productName": "Fer à béton HA8",
+          "theoreticalQty": 3,
+          "physicalQty": 3
+        },
+        {
+          "productId": "prod-005",
+          "productCode": "CAB-TH-2.5",
+          "productName": "Câble électrique TH 2.5mm (100m)",
+          "theoreticalQty": 2,
+          "physicalQty": 2
+        },
+        {
+          "productId": "prod-006",
+          "productCode": "PVC-P-110",
+          "productName": "Tuyau PVC Pression D110",
+          "theoreticalQty": 4,
+          "physicalQty": 4
+        }
+      ]
+    }
+  ],
+  "warehouseTransfers": [
+    {
+      "id": "e82b",
+      "reference": "TRANS-1754324325857",
+      "date": "2025-08-04T16:18:45.857Z",
+      "sourceWarehouseId": "wh-002",
+      "destinationWarehouseId": "wh-001",
+      "description": "This is a description",
+      "notes": "haha",
+      "items": [
+        {
+          "productId": "prod-005",
+          "quantity": 1,
+          "costPrice": 22000
+        }
+      ]
+    },
+    {
+      "id": "81df",
+      "reference": "TRANS-1754325384869",
+      "date": "2025-08-04T16:36:24.869Z",
+      "sourceWarehouseId": "wh-003",
+      "destinationWarehouseId": "wh-001",
+      "description": "gg",
+      "notes": "",
+      "items": [
+        {
+          "productId": "prod-004",
+          "quantity": 1,
+          "costPrice": 3500
+        }
+      ]
+    }
+  ],
+  "productTransformations": [
+    {
+      "id": "70dd",
+      "reference": "TRF-1754322790435",
+      "date": "2025-08-04T15:53:10.435Z",
+      "warehouseId": "wh-002",
+      "description": "",
+      "notes": "",
+      "inputItems": [
+        {
+          "productId": "prod-001",
+          "quantity": 1,
+          "costPrice": 4800
+        }
+      ],
+      "outputItems": [
+        {
+          "productId": "prod-002",
+          "quantity": 4,
+          "costPrice": 2900
+        }
+      ]
+    },
+    {
+      "id": "298d",
+      "reference": "TRF-1754325531599",
+      "date": "2025-08-04T16:38:51.599Z",
+      "warehouseId": "wh-002",
+      "description": "",
+      "notes": "",
+      "inputItems": [
+        {
+          "productId": "prod-001",
+          "quantity": 1,
+          "costPrice": 4800
+        }
+      ],
+      "outputItems": [
+        {
+          "productId": "prod-004",
+          "quantity": 2,
+          "costPrice": 3500
         }
       ]
     }

@@ -23,8 +23,8 @@ export interface InventoryItem {
     productId: string;
     productCode: string;
     productName: string;
-    theoreticalQty: number; // Stock machine au moment de la création
-    physicalQty: number | null; // Stock physique compté
+    theoreticalQty: number;
+    physicalQty: number | null;
 }
 
 export interface Inventory {
@@ -36,4 +36,38 @@ export interface Inventory {
     type: 'Annuel' | 'Spontané' | 'Tournant';
     notes?: string;
     items: InventoryItem[];
+}
+
+export interface WarehouseTransferItem {
+    productId: string;
+    quantity: number;
+    costPrice: number;
+}
+
+export interface WarehouseTransfer {
+    id: string;
+    reference: string;
+    date: string | Date;
+    sourceWarehouseId: string;
+    destinationWarehouseId: string;
+    description?: string;
+    notes?: string;
+    items: WarehouseTransferItem[];
+}
+
+export interface ProductTransformationItem {
+    productId: string;
+    quantity: number;
+    costPrice: number;
+}
+
+export interface ProductTransformation {
+    id: string;
+    reference: string;
+    date: string | Date;
+    warehouseId: string;
+    description?: string;
+    notes?: string;
+    inputItems: ProductTransformationItem[];
+    outputItems: ProductTransformationItem[];
 }
