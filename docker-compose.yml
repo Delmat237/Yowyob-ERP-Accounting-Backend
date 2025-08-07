@@ -1,0 +1,180 @@
+version: '3.8'
+
+services:
+  # Base de données PostgreSQL pour la persistance des données.
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres
+    # Expose le port 5432 du conteneur sur le port 5432 de la machine hôte.
+    ports:
+      - "5432:5432"
+    environment:
+      # Définit le nom d'utilisateur de la base de données.
+      POSTGRES_USER: springuser
+      # Définit le mot de passe de la base de données.
+      POSTGRES_PASSWORD: azaleodel
+      # Définit le nom de la base de données par défaut.
+      POSTGRES_DB: yowyob_erp
+    volumes:
+      # Crée un volume persistant pour stocker les données de la base de données.
+      - postgres-data:/var/lib/postgresql/data
+      # Monte le script init.sql pour l'initialisation de la base de données.
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - my-network
+    # Vérifie si la base de données est prête à accepter des connexions.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U springuser -d yowyob_erp"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Moteur de recherche Elasticsearch pour l'indexation et la recherche de données.
+  elasticsearch:
+    image: elasticsearch:8.11.1
+    hostname: elasticsearch
+    container_name: elasticsearch
+    # Expose les ports HTTP (9200) et de communication inter-nœuds (9300).
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      # Configure Elasticsearch pour fonctionner comme un nœud unique.
+      - discovery.type=single-node
+      # Désactive la sécurité pour faciliter les tests et le développement.
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      # Verrouille la mémoire pour éviter que la JVM ne soit paginée sur le disque.
+      - bootstrap.memory_lock=true
+      # Définit la taille de la mémoire allouée à la JVM d'Elasticsearch.
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      # Crée un volume persistant pour stocker les données d'Elasticsearch.
+      - es-data:/usr/share/elasticsearch/data
+    networks:
+      - my-network
+    # Vérifie l'état de santé du cluster Elasticsearch.
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Gestionnaire de messages Kafka, divisé en deux services: Zookeeper et Kafka.
+  # Zookeeper est un coordinateur essentiel pour le cluster Kafka.
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    hostname: zookeeper
+    container_name: zookeeper
+    # Expose le port par défaut de Zookeeper.
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SYNC_LIMIT: 2
+    networks:
+      - my-network
+    # Vérifie si le service Zookeeper est actif.
+    healthcheck:
+      test: ["CMD-SHELL", "echo stat | nc localhost 2181"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Kafka est le broker de messages, qui dépend de Zookeeper.
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    hostname: kafka
+    container_name: kafka
+    # Expose le port par défaut (9092) et le port public (9093).
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      KAFKA_BROKER_ID: 1
+      # Connecte Kafka au service Zookeeper via son nom de service Docker.
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      # Définit les listeners pour les connexions internes et externes.
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:9093
+      # Indique aux clients (externes) comment se connecter.
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      # Permet la création automatique de sujets.
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'  
+      # Permet la suppression de sujets.
+      KAFKA_DELETE_TOPIC_ENABLE: 'true'   
+      
+    networks:
+      - my-network
+    # Démarre Kafka uniquement après que Zookeeper soit sain.
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    # Vérifie si le broker Kafka est accessible.
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Base de données In-Memory Redis pour la mise en cache.
+  redis:
+    image: redis:7.2.4-alpine
+    container_name: redis
+    # Expose le port par défaut de Redis.
+    ports:
+      - "6379:6379"
+    # Lance Redis avec un mot de passe.
+    command: redis-server --requirepass azaleodel
+    volumes:
+      # Crée un volume persistant pour les données de Redis (facultatif pour le cache).
+      - redis-data:/data
+    networks:
+      - my-network
+    # Vérifie la connexion à Redis avec le mot de passe.
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a azaleodel ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Kafka UI pour l'administration et le monitoring de Kafka.
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    # Expose le port de l'interface utilisateur.
+    ports:
+      - "8080:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      # Se connecte à Kafka en utilisant son nom de service Docker.
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      # Se connecte à Zookeeper en utilisant son nom de service Docker.
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    networks:
+      - my-network
+    # Démarre Kafka-UI uniquement après que Kafka soit sain.
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+# Définition des volumes nommés pour la persistance des données.
+volumes:
+  postgres-data:
+  es-data:
+  redis-data:
+
+# Définition du réseau partagé par tous les services.
+networks:
+  my-network:
+    driver: bridge
