@@ -37,7 +37,7 @@ public class AuthService {
         
         return webClient
                 .post()
-                .uri(authApiUrl + "/validate")
+                .uri(authApiUrl + "/validate") // Endpoint de validation du token à implementer par ce servi
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(JsonNode.class)
@@ -62,11 +62,11 @@ public class AuthService {
     /**
      * Récupère les informations utilisateur
      */
-    @Cacheable(value = "user-info", key = "#userId")
-    public Mono<UserInfo> getUserInfo(String userId, String token) {
+    @Cacheable(value = "user-info", key = "#userEmail")
+    public Mono<UserInfo> getUserInfo(String userEmail, String token) {
         return webClient
                 .get()
-                .uri(authApiUrl + "/users/" + userId)
+                .uri(authApiUrl + "/users/email/" + userEmail)
                 .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(UserInfo.class)

@@ -19,8 +19,15 @@ public interface DetailEcritureRepository extends JpaRepository<DetailEcriture, 
     List<DetailEcriture> findByTenantIdAndAccountNumber(@Param("tenantId") String tenantId,
                                                        @Param("noCompte") String noCompte);
 
-    @Query("SELECT d FROM DetailEcriture d JOIN d.ecritureComptable e WHERE e.tenantId = :tenantId AND e.dateEcriture BETWEEN :startDate AND :endDate")
+    @Query("SELECT d FROM DetailEcriture d JOIN d.ecritureComptable e WHERE d.tenantId = :tenantId AND e.dateEcriture BETWEEN :startDate AND :endDate")
     List<DetailEcriture> findByTenantIdAndDateRange(@Param("tenantId") String tenantId,
                                                    @Param("startDate") LocalDate startDate,
-                                                                                                   @Param("endDate") LocalDate endDate);    
-                                                }
+                                                   @Param("endDate") LocalDate endDate);
+
+    @Query("SELECT SUM(d.montantDebit) - SUM(d.montantCredit) FROM DetailEcriture d WHERE d.tenantId = :tenantId AND d.planComptable.noCompte = :noCompte")
+    Double calculateAccountBalance(@Param("tenantId") String tenantId, @Param("noCompte") String noCompte);
+
+    @Query("SELECT d FROM DetailEcriture d WHERE d.tenantId = :tenantId AND d.planComptable.noCompte LIKE :accountPrefix%")
+    List<DetailEcriture> findByTenantIdAndAccountPrefix(@Param("tenantId") String tenantId,
+                                                       @Param("accountPrefix") String accountPrefix);
+}
