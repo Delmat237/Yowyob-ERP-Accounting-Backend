@@ -1,19 +1,24 @@
 # YOWYOB ERP - Backend
 
-YOWYOB ERP est un système ERP multi-tenant conçu pour gérer les opérations commerciales, incluant la comptabilité conforme OHADA, la gestion des agences et des magasins, ainsi que les interactions avec les tiers. Le backend est construit avec Spring Boot, intégrant Keycloak pour le contrôle d'accès basé sur les rôles (RBAC), Kafka pour les événements asynchrones, Redis pour le cache, et WebSocket pour les notifications en temps réel.
+YOWYOB ERP est un Système ERP multi-tenant conforme aux normes OHADA, développé avec Spring Boot. Gère les opérations CRUD pour les tenants, intègre Kafka pour la gestion des événements (création, mise à jour, suppression), Redis pour le caching, et PostgreSQL pour la persistance des données. Conçu pour une scalabilité et une isolation robuste des données par tenant.
 
 ## Table des matières
-- [Fonctionnalités](#fonctionnalités)
-- [Architecture](#architecture)
-- [Prérequis](#prérequis)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Exécution de l'application](#exécution-de-lapplication)
-- [Documentation API](#documentation-api)
-- [Tests](#tests)
-- [Notifications en temps réel](#notifications-en-temps-réel)
-- [Contribuer](#contribuer)
-- [Licence](#licence)
+- [YOWYOB ERP - Backend](#yowyob-erp---backend)
+  - [Table des matières](#table-des-matières)
+  - [Fonctionnalités](#fonctionnalités)
+  - [Architecture](#architecture)
+  - [Prérequis](#prérequis)
+  - [Installation](#installation)
+  - [Technologies](#technologies)
+  - [Configuration](#configuration)
+  - [Exécution de l'application](#exécution-de-lapplication)
+  - [Documentation API](#documentation-api)
+  - [Tests](#tests)
+    - [Tests unitaires et d'intégration](#tests-unitaires-et-dintégration)
+    - [Dépendances de test](#dépendances-de-test)
+  - [Notifications en temps réel](#notifications-en-temps-réel)
+  - [Contribuer](#contribuer)
+  - [Licence](#licence)
 
 ## Fonctionnalités
 - **Multi-tenant** : Gestion des organisations (`Tenant`) avec isolation des données.
