@@ -71,5 +71,5 @@ def concat_files(root_dir: str, output_file: str):
 # Exemple d'utilisation
 if __name__ == "__main__":
     dossier_source = "."  # À adapter
-    fichier_sortie = "../dashboard-4.txt"
+    fichier_sortie = "../dashboard-5.txt"
     concat_files(dossier_source, fichier_sortie)

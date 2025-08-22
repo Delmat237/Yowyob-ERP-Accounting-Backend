@@ -4,7 +4,7 @@ import { Invoice, Order, OrderJournalEntry } from "@/types/sales";
 import { GeneralOptions, FiscalYear } from "@/types/settings";
 import { Warehouse, StockMovement, Inventory, WarehouseTransfer, ProductTransformation } from "@/types/stock";
 
-const API_BASE_URL = "http://localhost:3001";
+const API_BASE_URL = "http://localhost:3004";
 
 const apiRequest = async <T>(endpoint: string, method: string = 'GET', body?: any): Promise<T> => {
     const config: RequestInit = {
