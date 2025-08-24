@@ -52,17 +52,15 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const handleLogin = async (data: LoginFormData) => {
     setIsLoading(true);
     try {
-      // Appel API json-server (remplacez l'URL par celle de votre json-server déployé)
-  const res = await fetch('http://localhost:3004/users?email=' + encodeURIComponent(data.email));
+  const res = await fetch('http://localhost:8080/users?email=' + encodeURIComponent(data.email) + '?password=' + encodeURIComponent(data.password));
       const users = await res.json();
       const user = users.find((u: any) => u.password === data.password);
       if (!user) throw new Error('Identifiants invalides');
       router.push('/dashboard');
-      // window.location.href = "http://localhost:3002/dashboard";
       onClose();
     } catch (error: any) {
-      // alert(error.message || 'Erreur de connexion');
-      router.push('/dashboard');
+      alert(error.message || 'Erreur de connexion');
+      // router.push('/dashboard');
     } finally {
       setIsLoading(false);
     }

@@ -89,9 +89,9 @@ export function InventoryDetailView({ inventory, onSave, onValidate, onDelete, o
             </div>
             <div className="p-4 border-b">
                  <h1 className="text-2xl font-semibold">Fiche d'inventaire : {inventory.reference}</h1>
-                 <p className="text-sm text-gray-500">
+                 <div className="text-sm text-gray-500">
                     Date: {format(new Date(inventory.date), 'dd MMMM yyyy')} | Statut: <Badge>{inventory.status}</Badge>
-                </p>
+                </div>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="flex-1 flex flex-col min-h-0">
                 <div className='flex-grow overflow-y-auto p-4'>
