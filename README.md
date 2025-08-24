@@ -1,4 +1,4 @@
-# ComOps - Commercial Operations Management (Frontend)
+# RT-COmOps (Frontend)
 
 Built with [Next.js](https://nextjs.org/), [TypeScript](https://www.typescriptlang.org/), and [Tailwind CSS](https://tailwindcss.com/). 
 The UI components are built using [Shadcn/UI](https://ui.shadcn.com/).
