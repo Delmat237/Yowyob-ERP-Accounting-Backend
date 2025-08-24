@@ -23,7 +23,11 @@ export interface User {
     title: string;
     profileId: string;
     creationDate: string | Date;
-    password?: string; // Ne sera jamais renvoyé par une vraie API
+    password?: string;
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+    company?: string;
 }
 
 export interface SystemAudit {
@@ -32,4 +36,17 @@ export interface SystemAudit {
     action: string;
     date: string | Date;
     remarks: string;
+}
+
+export interface LoginData {
+    email: string;
+    password: string;
+}
+
+export interface RegisterData {
+    firstName: string;
+    lastName: string;
+    email: string;
+    company: string;
+    password: string;
 }

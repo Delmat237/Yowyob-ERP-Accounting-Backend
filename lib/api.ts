@@ -1,5 +1,5 @@
 import { Client, Product, Supplier } from "@/types/core";
-import { Profile, SystemAudit, User } from "@/types/personnel";
+import { Profile, SystemAudit, User, LoginData, RegisterData } from "@/types/personnel";
 import { Invoice, Order, OrderJournalEntry } from "@/types/sales";
 import { GeneralOptions, FiscalYear } from "@/types/settings";
 import { Warehouse, StockMovement, Inventory, WarehouseTransfer, ProductTransformation } from "@/types/stock";
@@ -21,12 +21,55 @@ const apiRequest = async <T>(endpoint: string, method: string = 'GET', body?: an
     const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
 
     if (!response.ok) {
-        const errorInfo = await response.json();
+        let errorInfo;
+        try {
+             errorInfo = await response.json();
+        } catch(e) {
+            errorInfo = { message: `Erreur API: ${response.status} ${response.statusText}`};
+        }
         throw new Error(errorInfo.message || `Erreur API: ${method} ${endpoint}`);
     }
     
     if (method === 'DELETE' || response.status === 204) {
         return {} as T; 
+    }
+
+    return response.json();
+};
+
+
+export const registerUser = async (data: RegisterData): Promise<User> => {
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+
+    if (response.status === 409) {
+        throw new Error('Cet email est déjà utilisé.');
+    }
+
+    if (!response.ok) {
+        throw new Error("Une erreur s'est produite lors de l'inscription.");
+    }
+
+    return response.json();
+};
+
+
+export const loginUser = async (data: LoginData): Promise<User> => {
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+
+    if (response.status === 401) {
+        throw new Error('Email ou mot de passe invalide.');
+    }
+
+    if (!response.ok) {
+        throw new Error('Erreur de connexion.');
     }
 
     return response.json();
