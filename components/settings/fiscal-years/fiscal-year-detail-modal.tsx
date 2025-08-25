@@ -10,6 +10,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { format, parseISO } from 'date-fns';
 import { Separator } from '@/components/ui/separator';
+import { Item } from '@radix-ui/react-dropdown-menu';
 
 interface FiscalYearDetailModalProps {
     year: FiscalYear | null;
@@ -37,6 +38,7 @@ export function FiscalYearDetailModal({ year, allOrders, isOpen, onClose }: Fisc
         
         const topProducts = ordersInYear
             .flatMap(order => order.items)
+            .filter(item => item !== null)
             .reduce((acc, item) => {
                 acc[item.name] = (acc[item.name] || 0) + item.quantity;
                 return acc;
