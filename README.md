@@ -21,7 +21,7 @@ Follow these instructions to set up and run the project locally.
 
 ### Prerequisites
 
--   [Node.js](https://nodejs.org/) (version 18.x or later recommended)
+-   [Node.js](https://nodejs.org/) (version 20.x or later (!important))
 -   [npm](https://www.npmjs.com/) as your package manager.
 -   A running instance of the **ComOps Backend API**. By default, the frontend expects the backend to be running on `http://localhost:8080`.
 
