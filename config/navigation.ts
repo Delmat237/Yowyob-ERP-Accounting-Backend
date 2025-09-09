@@ -32,7 +32,7 @@ export type Module = {
   sidebarLinks: SidebarLink[];
 };
 
-export const moduleKeys = ["ventes", "stock", "personnel", "parametres"] as const;
+export const moduleKeys = ["ventes", "stock", "personnel",  "comptabilite","parametres"] as const;
 export type ModuleKey = typeof moduleKeys[number];
 
 export const modules: Record<ModuleKey, Module> = {
@@ -73,7 +73,22 @@ export const modules: Record<ModuleKey, Module> = {
       { title: "Piste d'audit", icon: History, href: "/settings/audits" },
     ],
   },
-  parametres: {
+  comptabilite: {
+    name: "Comptabilité",
+    icon: BookOpen,
+    composeActionLabel: "Nouvelle Écriture",
+    sidebarLinks: [
+      { title: "Tableau de Bord", icon: LayoutDashboard, href: "/accounting/dashboard" },
+      { title: "Plan Comptable", icon: BookOpen, href: "/accounting/chart-of-accounts" },
+      { title: "Opérations Comptables", icon: PenSquare, href: "/accounting/operations" },
+      { title: "Écritures Comptables", icon: FileClock, href: "/accounting/entries" },
+      { title: "Validation Écritures", icon: ShieldCheck, href: "/accounting/validation" },
+      { title: "Rapports Financiers", icon: FileText, href: "/accounting/reports" },
+      { title: "Journaux", icon: BookOpen, href: "/accounting/journals" },
+      { title: "Paramétrage", icon: Settings, href: "/accounting/settings" },
+    ],
+  },
+    parametres: {
     name: "Paramètres",
     icon: Settings,
     composeActionLabel: "Ajouter",

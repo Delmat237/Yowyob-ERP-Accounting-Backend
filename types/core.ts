@@ -53,3 +53,4 @@ export interface Supplier {
   isActive: boolean;
   notes?: string;
 }
+
