@@ -1,14 +1,13 @@
-// components/accounting/journal-comptable-detail-view.tsx
 "use client";
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Save, Trash2, ArrowLeft, Lock } from 'lucide-react';
+import { PeriodeComptable } from '@/types/accounting';
 import { Switch } from '@/components/ui/switch';
-import { Save, Trash2, ArrowLeft } from 'lucide-react';
-import { JournalComptable } from '@/types/accounting';
 import {
   Card,
   CardContent,
@@ -17,38 +16,46 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-interface JournalComptableDetailViewProps {
-  journal: JournalComptable | null;
-  onSave: (data: JournalComptable) => void;
+interface PeriodeComptableDetailViewProps {
+  periode: PeriodeComptable | null;
+  onSave: (data: PeriodeComptable) => void;
+  onClose: () => void;
   onDelete: () => void;
   onBack: () => void;
 }
 
-export const JournalComptableDetailView: React.FC<JournalComptableDetailViewProps> = ({
-  journal,
+export const PeriodeComptableDetailView: React.FC<PeriodeComptableDetailViewProps> = ({
+  periode,
   onSave,
+  onClose,
   onDelete,
   onBack,
 }) => {
-  const form = useForm<JournalComptable>({
-    defaultValues: journal || {
-      codeJournal: '',
-      libelle: '',
-      typeJournal: '',
+  const form = useForm<PeriodeComptable>({
+    defaultValues: periode || {
+      code: '',
+      dateDebut: new Date().toISOString().split('T')[0], // Use string format for input type="date"
+      dateFin: new Date().toISOString().split('T')[0],   // Use string format for input type="date"
+      cloturee: false,
       notes: '',
-      actif: true,
     },
   });
 
-  const onSubmit = (data: JournalComptable) => {
+  const onSubmit = (data: PeriodeComptable) => {
     onSave(data);
+  };
+
+  const handleClose = () => {
+    onClose();
   };
 
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-row items-center justify-between">
-
-
+        <div className="space-y-1">
+          
+        </div>
+       
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -56,45 +63,17 @@ export const JournalComptableDetailView: React.FC<JournalComptableDetailViewProp
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
-                name="codeJournal"
+                name="code"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Code Journal <span className="text-red-500">*</span></FormLabel>
+                    <FormLabel>Code (YYYY-MM) <span className="text-red-500">*</span></FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} placeholder="2025-09" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="libelle"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Libellé <span className="text-red-500">*</span></FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormField
-              control={form.control}
-              name="typeJournal"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Type Journal <span className="text-red-500">*</span></FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
                 name="notes"
@@ -108,13 +87,43 @@ export const JournalComptableDetailView: React.FC<JournalComptableDetailViewProp
                   </FormItem>
                 )}
               />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
-                name="actif"
+                name="dateDebut"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date de début <span className="text-red-500">*</span></FormLabel>
+                    <FormControl>
+                      <Input type="date" value={field.value.toISOString().split('T')[0]} onChange={(e) => field.onChange(new Date(e.target.value))} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="dateFin"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date de fin <span className="text-red-500">*</span></FormLabel>
+                    <FormControl>
+                      <Input type="date" value={field.value.toISOString().split('T')[0]} onChange={(e) => field.onChange(new Date(e.target.value))} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="cloturee"
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                     <div className="space-y-0.5">
-                      <FormLabel>Actif</FormLabel>
+                      <FormLabel>Clôturée</FormLabel>
                       <FormMessage />
                     </div>
                     <FormControl>
@@ -124,17 +133,23 @@ export const JournalComptableDetailView: React.FC<JournalComptableDetailViewProp
                 )}
               />
             </div>
-            <div className="flex justify-end">
-              {!journal?.ecritureComptable?.length && (
+            <div className="flex justify-end gap-2 mt-6">
+              <Button type="submit">
+                <Save className="mr-2 h-4 w-4" />
+                Enregistrer
+              </Button>
+              {!periode?.cloturee && (
+                <Button variant="outline" onClick={handleClose}>
+                  <Lock className="mr-2 h-4 w-4" />
+                  Clôturer
+                </Button>
+              )}
+              {!periode?.cloturee && (
                 <Button variant="destructive" onClick={onDelete}>
                   <Trash2 className="mr-2 h-4 w-4" />
                   Supprimer
                 </Button>
               )}
-              <Button type="submit">
-                <Save className="mr-2 h-4 w-4" />
-                Enregistrer
-              </Button>
             </div>
           </form>
         </Form>

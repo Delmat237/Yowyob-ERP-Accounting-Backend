@@ -12,7 +12,7 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { EcritureComptable } from '@/types/accounting';
-import { Edit, Trash2, Plus, Check } from 'lucide-react';
+import { Edit, Trash2, Plus, Check,RefreshCw } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface EcritureComptableListViewProps {
@@ -80,8 +80,9 @@ export const EcritureComptableListView: React.FC<EcritureComptableListViewProps>
           <Plus className="mr-2 h-4 w-4" />
           Nouvelle Écriture
         </Button>
-        <Button onClick={onRefresh}>Rafraîchir</Button>
-      </div>
+<Button onClick={onRefresh} variant="outline">
+            <RefreshCw className="h-4 w-4" />
+          </Button>      </div>
       <Table>
         <TableHeader>
           <TableRow>

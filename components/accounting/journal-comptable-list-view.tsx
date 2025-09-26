@@ -12,7 +12,7 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { JournalComptable } from '@/types/accounting';
-import { Edit, Trash2, Plus } from 'lucide-react';
+import { Edit, Trash2, Plus,RefreshCw } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface JournalComptableListViewProps {
@@ -68,8 +68,9 @@ export const JournalComptableListView: React.FC<JournalComptableListViewProps> =
           <Plus className="mr-2 h-4 w-4" />
           Nouveau Journal
         </Button>
-        <Button onClick={onRefresh}>Rafraîchir</Button>
-      </div>
+<Button onClick={onRefresh} variant="outline">
+            <RefreshCw className="h-4 w-4" />
+          </Button>      </div>
       <Table>
         <TableHeader>
           <TableRow>

@@ -1,21 +1,27 @@
 import {
-  ShoppingCart,
   Users,
   Truck,
   FileText,
-  UserCog,
+   BarChart3,
   Settings,
   LayoutDashboard,
   BookOpen,
   PackagePlus,
   PackageSearch,
-  Warehouse,
   FileClock,
   ShieldCheck,
   History,
   PenSquare,
   ArrowRightLeft,
-  Replace
+  CreditCard,
+  Receipt,
+  Coins,
+  Landmark,
+  Globe,
+  Building2,
+  Notebook,
+  Scale,
+  ListChecks
 } from "lucide-react";
 
 export type SidebarLink = {
@@ -32,45 +38,63 @@ export type Module = {
   sidebarLinks: SidebarLink[];
 };
 
-export const moduleKeys = ["ventes", "stock", "personnel",  "comptabilite","parametres"] as const;
+export const moduleKeys = [
+  "dashboard",
+  "clients",
+  "fournisseurs",
+  "analyse",
+  "comptabilite",
+  "configuration"
+] as const;
 export type ModuleKey = typeof moduleKeys[number];
 
 export const modules: Record<ModuleKey, Module> = {
-  ventes: {
-    name: "Ventes",
-    icon: ShoppingCart,
+  dashboard: {
+    name: "Tableau de bord",
+    icon: LayoutDashboard,
+    composeActionLabel: "",
+    sidebarLinks: [
+      { title: "Tableau de Bord", icon: LayoutDashboard, href: "/accounting/dashboard" },
+    ],
+  },
+  clients: {
+    name: "Clients",
+    icon: Users,
     composeActionLabel: "Nouveau",
     sidebarLinks: [
-      { title: "Tableau de Bord", icon: LayoutDashboard, href: "/dashboard" },
-      { title: "Saisie Commande", icon: PenSquare, href: "/sales/new-order" },
-      { title: "Journal Commandes", icon: BookOpen, href: "/sales/order-journal" },
-      { title: "Factures", icon: FileText, href: "/invoices" },
+      { title: "Factures Clients", icon: Receipt, href: "/invoices" },
+      { title: "Avoirs", icon: PenSquare, href: "/sales/new-order" },
+      { title: "Paiements", icon: CreditCard, href: "/sales/order-journal" },
+      { title: "Produits", icon: PackageSearch, href: "/products" },
       { title: "Clients", icon: Users, href: "/customers" },
       { title: "Fournisseurs", icon: Truck, href: "/suppliers" },
     ],
   },
-  stock: {
-    name: "Stock",
-    icon: Warehouse,
-    composeActionLabel: "Nouvel Article",
+  fournisseurs: {
+    name: "Fournisseurs",
+    icon: Truck,
+    composeActionLabel: "Nouveau",
     sidebarLinks: [
-      { title: "État des Stocks", icon: PackageSearch, href: "/stock/status" },
-      { title: "Mouvements", icon: PackagePlus, href: "/stock/entries" },
-      { title: "Transferts", icon: ArrowRightLeft, href: "/stock/transfer" },
-      { title: "Transformations", icon: Replace, href: "/stock/transformation" },
-      { title: "Journal Mouvements", icon: FileClock, href: "/stock/journal" },
-      { title: "Inventaire", icon: BookOpen, href: "/stock/inventory" },
-      { title: "Articles", icon: ShoppingCart, href: "/products" },
+      { title: "Factures Fournisseurs", icon: Receipt, href: "/invoices" },
+      { title: "Remboursements", icon: Coins, href: "/stock/entries" },
+      { title: "Paiements", icon: ArrowRightLeft, href: "/stock/transfer" },
+      { title: "Produits", icon: PackagePlus, href: "/stock/transformation" },
+      { title: "Fournisseurs", icon: Building2, href: "/suppliers" },
     ],
   },
-  personnel: {
-    name: "Personnel",
-    icon: UserCog,
-    composeActionLabel: "Nouvel Utilisateur",
+  analyse: {
+    name: "Analyse",
+    icon:  BarChart3,
+    composeActionLabel: "Bilan",
     sidebarLinks: [
-      { title: "Utilisateurs", icon: Users, href: "/settings/users" },
-      { title: "Profils & Droits", icon: ShieldCheck, href: "/settings/roles" }, 
-      { title: "Piste d'audit", icon: History, href: "/settings/audits" },
+      { title: "Bilan", icon: Scale, href: "/analyse/balance-sheet" },
+      { title: "Compte de Résultat", icon: BookOpen, href: "/analyse/profit-and-loss" },
+      { title: "Flux de Trésorerie", icon: ArrowRightLeft, href: "/analyse/cache-flow" },
+      { title: "Résumé Général", icon: Notebook, href: "/analyse/executive-summary" },
+      { title: "Rapports Financiers", icon: FileText, href: "/accounting/reports" },
+      { title: "Grand Livre", icon: BookOpen, href: "/analyse/generale-ledger" },
+      { title: "Balance Générale", icon: Landmark, href: "/analyse/generale-balance" },
+      { title: "Journal Audit", icon: History, href: "/analyse/audits" },
     ],
   },
   comptabilite: {
@@ -78,23 +102,25 @@ export const modules: Record<ModuleKey, Module> = {
     icon: BookOpen,
     composeActionLabel: "Nouvelle Écriture",
     sidebarLinks: [
-      { title: "Tableau de Bord", icon: LayoutDashboard, href: "/accounting/dashboard" },
       { title: "Plan Comptable", icon: BookOpen, href: "/accounting/chart-of-accounts" },
-      { title: "Opérations Comptables", icon: PenSquare, href: "/accounting/operations" },
       { title: "Écritures Comptables", icon: FileClock, href: "/accounting/entries" },
+      { title: "Saisie Semi-Automatique", icon: ListChecks, href: "/accounting/semi-auto-entries" },
       { title: "Validation Écritures", icon: ShieldCheck, href: "/accounting/validation" },
-      { title: "Rapports Financiers", icon: FileText, href: "/accounting/reports" },
-      { title: "Journaux", icon: BookOpen, href: "/accounting/journals" },
       { title: "Paramétrage", icon: Settings, href: "/accounting/settings" },
     ],
   },
-    parametres: {
-    name: "Paramètres",
+  configuration: {
+    name: "Configuration",
     icon: Settings,
     composeActionLabel: "Ajouter",
     sidebarLinks: [
-      { title: "Société", icon: Settings, href: "/settings/company" },
-      { title: "Exercices", icon: BookOpen, href: "/settings/fiscal-years" },
+      { title: "Plan Comptable", icon: BookOpen, href: "/accounting/chart-of-accounts" },
+      { title: "Opérations Comptables", icon: FileClock, href: "/accounting/operations" },
+      { title: "Taxes", icon: Coins, href: "#" },
+      { title: "Journaux", icon: Notebook, href: "/accounting/journals" },
+      { title: "Devises", icon: Globe, href: "#" },
+      { title: "Positions Fiscales", icon: Scale, href: "#" },
+      { title: "Modes de Paiement", icon: CreditCard, href: "#" },
     ],
   },
 };

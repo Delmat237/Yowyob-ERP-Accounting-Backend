@@ -1,9 +1,11 @@
 export interface Account {
-  id: UUID; // Unique identifier for the account
+  id: UUID; // Unique identifier for the account 
+  classe?:number;
   noCompte: string; // Account code (e.g., 101100, 411xxxx)
   libelle: string; // Account name (e.g., "Capital social", "Vente à un client au comptant")
   type: string; // Account type (e.g., "Capitaux propres", "Comptes de tiers")
   notes: string; // Additional notes or description
+  actif: boolean; // Indicates if the account is active
   allowEntry: boolean; // Indicates if the account allows entries (e.g., checkbox in the interface)
   view: string; // View type (e.g., "Vue" for visibility in the interface)
   isStatic: boolean; // Indicates if the account is static or dynamic (e.g., 57xxxx vs 411xxxx)
@@ -30,6 +32,7 @@ export interface OperationComptable {
   plafondClient?: number;
   actif: boolean;
   notes?: string;
+  counterpartyDetails?: CounterpartyDetail[];
   createdAt?: Date;
   updatedAt?: Date;
   createdBy?: string;
@@ -81,4 +84,44 @@ ecritureComptable?: EcritureComptable[];
 
 }
 
+
+ export interface PeriodeComptable {
+  id?: UUID;
+  code?: string; // Format YYYY-MM
+  dateDebut?: Date;
+  dateFin?: Date;
+  cloturee?: boolean;
+  dateCloture?: Date;
+  notes?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  createdBy?: string;
+  updatedBy?: string;
+}
+
+
+export interface CounterpartyDetail {
+  id?: UUID;
+  account: string; // Account code
+  isTiers: boolean; // Client or Supplier account
+  amountType: 'TTC' | 'HT' | 'TVA';
+  journalType: 'VENTES' | 'ACHATS' | 'DIVERS' | 'TRESORERIE';
+  debitOrCredit: 'DEBIT' | 'CREDIT';
+}
+
+export interface LedgerSettings {
+  id?: UUID;
+  accountRangeStart: string;
+  accountRangeEnd: string;
+  reportFormat: 'PDF' | 'EXCEL' | 'CSV';
+  includeDetails: boolean;
+}
+
+export interface GeneralSettings {
+  id?: UUID;
+  defaultCurrency: string;
+  defaultFiscalYear: string; // Format YYYY
+
+  entryMode?: 'AUTOMATIC' |'SEMI_AUTOMATIC' | 'MANUAL';
+}
 export type UUID = string; 

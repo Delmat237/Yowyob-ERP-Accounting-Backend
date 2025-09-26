@@ -2,14 +2,14 @@
 
 import { UserNav } from "./user-nav";
 import { Button } from "../ui/button";
-import { Menu, Search, Settings, HelpCircle, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Menu, Search, Settings, HelpCircle } from "lucide-react";
 import { Input } from "../ui/input";
 import { useSidebar } from "@/hooks/useSidebar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import Link from "next/link";
 
 export function Header() {
-  const { isCollapsed, toggle } = useSidebar();
+  const { toggle } = useSidebar();
 
   return (
     <header className="flex-shrink-0 h-16 flex items-center px-4 md:px-6 bg-transparent">
@@ -20,15 +20,7 @@ export function Header() {
         KSM
       </div>
 
-      <div className="flex-1 max-w-2xl">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-          <Input
-            placeholder="Rechercher..."
-            className="w-full bg-[#eaf1fb] rounded-full pl-10 pr-4 py-2 h-12 border-transparent focus:bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-200"
-          />
-        </div>
-      </div>
+
 
       <div className="flex-1" />
 
@@ -40,7 +32,7 @@ export function Header() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem>Centre d'aide</DropdownMenuItem>
+            <DropdownMenuItem>Centre d&#39;aide</DropdownMenuItem>
             <DropdownMenuItem>Formation</DropdownMenuItem>
             <DropdownMenuItem>Nouveautés</DropdownMenuItem>
             <DropdownMenuSeparator />

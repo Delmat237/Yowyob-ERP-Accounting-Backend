@@ -5,7 +5,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { OperationComptable } from '@/types/accounting';
 import { getOperationsComptables, createOperationComptable, updateOperationComptable, deleteOperationComptable } from '@/lib/api';
 import { OperationComptableListView } from '@/components/accounting/operation-comptable-list-view';
-import { OperationComptableDetailView } from '@/components/accounting/operation-comptable-detail-view';
+import { OperationForm } from '@/components/accounting/settings/operation-form';
 import { useCompose } from '@/hooks/use-compose-store';
 import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 
@@ -69,13 +69,11 @@ export default function OperationComptablePage() {
   const handleOpenCompose = () => {
     onOpen({
       title: "Nouvelle Opération Comptable",
-      content: <OperationComptableDetailView onSave={handleSave} onDelete={() => {}} onBack={() => {}} operation={null} />,
+      content: <OperationForm onSave={handleSave} onCancel={() => closeCompose} initialData={null} />,
     });
   };
 
-  const handleBackToList = () => {
-    setSelectedOperationId(null);
-  };
+
 
   const selectedOperation = selectedOperationId && Array.isArray(operations)
     ? operations.find(op => op.id === selectedOperationId) || null
@@ -83,11 +81,11 @@ export default function OperationComptablePage() {
 
   if (selectedOperationId && selectedOperation) {
     return (
-      <OperationComptableDetailView
-        operation={selectedOperation}
+      <OperationForm
+        initialData={selectedOperation}
         onSave={handleSave}
-        onDelete={() => setOperationToDelete(selectedOperation)}
-        onBack={handleBackToList}
+        // onDelete={() => setOperationToDelete(selectedOperation)}
+        onCancel={closeCompose}
       />
     );
   }

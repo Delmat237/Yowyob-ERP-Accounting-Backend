@@ -6,22 +6,15 @@ import { useSidebar } from "@/hooks/useSidebar";
 import { useNavigationStore } from "@/hooks/use-navigation-store";
 import { modules } from "@/config/navigation";
 import { Button } from "../ui/button";
-import { PenSquare, ShoppingCart, Warehouse, UserCog, Settings } from "lucide-react";
-import { Separator } from "../ui/separator";
+import { PenSquare } from "lucide-react";
 import { useCompose } from "@/hooks/use-compose-store";
 import { CustomerForm } from "../customers/customer-form";
 import { ProductForm } from "../products/product-form";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
-const moduleIcons = {
-    ventes: ShoppingCart,
-    stock: Warehouse,
-    personnel: UserCog,
-    parametres: Settings
-};
 
 export function Sidebar() {
-  const { isCollapsed, toggle } = useSidebar();
+  const { isCollapsed } = useSidebar();
   const { activeModule, setActiveModule } = useNavigationStore();
   const { onOpen } = useCompose();
 
@@ -29,10 +22,10 @@ export function Sidebar() {
   
   const handleCompose = () => {
     switch(activeModule) {
-      case 'ventes':
+      case 'clients':
         onOpen({ title: 'Nouveau Client', content: <CustomerForm initialData={null} onSave={() => {}} onCancel={() => {}} />});
         break;
-      case 'stock':
+      case 'fournisseurs':
         onOpen({ title: 'Nouvel Article', content: <ProductForm initialData={null} onSave={() => {}} onCancel={() => {}} />});
         break;
       default:

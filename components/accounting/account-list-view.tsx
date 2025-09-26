@@ -11,7 +11,7 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { Account } from '@/types/accounting';
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2, RefreshCw } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface AccountListViewProps {
@@ -62,15 +62,17 @@ export const AccountListView: React.FC<AccountListViewProps> = ({
     <div className="space-y-4">
       <div className="flex justify-between">
         <Button onClick={onAddNew}>Nouveau</Button>
-        <Button onClick={onRefresh}>Rafraîchir</Button>
+        <Button onClick={onRefresh} variant="outline">
+          <RefreshCw className="h-4 w-4" />
+        </Button>
       </div>
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Code</TableHead>
             <TableHead>Nom du compte</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Autoriser l'écriture</TableHead>
+            <TableHead>Actif</TableHead>
+            <TableHead>Autoriser l&#39;écriture</TableHead>
             <TableHead>Vue</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
@@ -89,7 +91,7 @@ export const AccountListView: React.FC<AccountListViewProps> = ({
               <TableRow key={account.id} className="group">
                 <TableCell>{account.noCompte}</TableCell>
                 <TableCell>{account.libelle}</TableCell>
-                <TableCell>{account.type}</TableCell>
+                <TableCell>{account.actif ? 'Oui' : 'Non'}</TableCell>
                 <TableCell>{account.allowEntry ? 'Oui' : 'Non'}</TableCell>
                 <TableCell>{account.view}</TableCell>
                 <TableCell>

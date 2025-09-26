@@ -2,12 +2,31 @@
 
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import {  Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Save, Trash2, ArrowLeft } from 'lucide-react';
-import { Account } from '@/types/accounting';
+import { Account ,UUID} from '@/types/accounting';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+// Define form-specific defaults that align with Account type
+const defaultAccountValues: Partial<Account> = {
+  noCompte: '',
+  libelle: '',
+  type: '',
+  allowEntry: false,
+  view: 'Vue',
+  isStatic: false,
+  journalType: 'Journal des ventes',
+  amountType: 'Montant TTC',
+};
 
 interface AccountDetailViewProps {
   account: Account | null;
@@ -22,23 +41,37 @@ export const AccountDetailView: React.FC<AccountDetailViewProps> = ({
   onDelete,
   onBack,
 }) => {
+  // Explicitly type the useForm with Account and provide a resolver if needed
   const form = useForm<Account>({
-    defaultValues: account || {
-      id: '',
-      code: '',
-      name: '',
-      type: '',
-      allowEntry: false,
-      view: 'Vue',
-      isStatic: false,
-      journalType: 'Journal des ventes',
-      amountType: 'Montant TTC',
-    },
+    defaultValues: account || defaultAccountValues as Account,
+    // Optionally add a resolver like yup if validation is complex
+    // resolver: yupResolver(schema), // Uncomment and define schema if needed
   });
 
   const onSubmit = (data: Account) => {
-    onSave(data);
+    // Ensure all required fields are present before saving
+    const validatedData: Account = {
+      ...data,
+      id: data.id || crypto.randomUUID() as UUID, // Generate ID if not present
+      noCompte: data.noCompte || '', // Ensure noCompte is set
+      libelle: data.libelle || '', // Ensure libelle is set
+    };
+    onSave(validatedData);
   };
+
+  // Predefined options for journalType and amountType
+  const journalTypeOptions = [
+    'Journal des ventes',
+    'Journal des achats',
+    'Journal des opérations diverses',
+    'Journal de trésorerie',
+  ];
+
+  const amountTypeOptions = [
+    'Montant TTC',
+    'Montant HT',
+    'Montant TVA',
+  ];
 
   return (
     <div className="space-y-4">
@@ -46,10 +79,10 @@ export const AccountDetailView: React.FC<AccountDetailViewProps> = ({
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
-            name="code"
+            name="noCompte"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Code *</FormLabel>
+                <FormLabel>Code <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -59,10 +92,10 @@ export const AccountDetailView: React.FC<AccountDetailViewProps> = ({
           />
           <FormField
             control={form.control}
-            name="name"
+            name="libelle"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nom du compte *</FormLabel>
+                <FormLabel>Nom du compte <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -75,7 +108,7 @@ export const AccountDetailView: React.FC<AccountDetailViewProps> = ({
             name="type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Type *</FormLabel>
+                <FormLabel>Type <span className="text-red-500">*</span></FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -91,7 +124,7 @@ export const AccountDetailView: React.FC<AccountDetailViewProps> = ({
                 <FormControl>
                   <Switch checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
-                <FormLabel>Autoriser l'écriture</FormLabel>
+                <FormLabel>Autoriser l&#39;écriture</FormLabel>
               </FormItem>
             )}
           />
@@ -114,8 +147,23 @@ export const AccountDetailView: React.FC<AccountDetailViewProps> = ({
               <FormItem>
                 <FormLabel>Type de journal</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value || ''}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner un type de journal" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {journalTypeOptions.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -126,8 +174,23 @@ export const AccountDetailView: React.FC<AccountDetailViewProps> = ({
               <FormItem>
                 <FormLabel>Type de montant</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value || ''}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner un type de montant" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {amountTypeOptions.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
